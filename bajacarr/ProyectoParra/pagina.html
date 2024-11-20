@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bajacar - Sistema de Gestión</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="window-controls">
+            <button class="control minimize"></button>
+            <button class="control maximize"></button>
+            <button class="control close"></button>
+        </div>
+        <h1 class="title">BAJACAR</h1>
+        <div class="user-icon">
+            <span class="user-initial">B</span>
+            <div class="dropdown">
+                <ul>
+                    <li><a href="#">Ver Perfil</a></li>
+                    <li><a href="#">Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="navbar">
+                <li><button data-target="home-section" class="nav-btn">Home</button></li>
+                <li><button data-target="add-product-section" class="nav-btn">Agregar Producto</button></li>
+                <li><button data-target="inventory-section" class="nav-btn">Inventario</button></li> 
+                <li><button data-target="update-stock-section" class="nav-btn">Actualizar Stock</button></li>
+                <li><button data-target="sales-section" class="nav-btn">Ventas</button></li>
+                <li><button data-target="losses-section" class="nav-btn">Pérdidas</button></li>
+                <li><button data-target="reports-section" class="nav-btn">Reportes</button></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="home-section" class="section">
+                <h2>Bienvenido a Bajacar</h2>
+                <p>Explora las opciones en la barra lateral para comenzar.</p>
+            </section>
+
+            <!-- Agregar Producto -->
+            <section id="add-product-section" class="section hidden">
+                <h2>Agregar Producto</h2>
+                <form>
+                    <label for="product-name">Nombre del producto:</label>
+                    <input type="text" id="product-name" required>
+                    <label for="category">Categoría:</label>
+                    <input type="text" id="category" required>
+                    <label for="purchase-price">Precio de compra:</label>
+                    <input type="number" id="purchase-price" step="0.01" required>
+                    <label for="sale-price">Precio de venta:</label>
+                    <input type="number" id="sale-price" step="0.01" required>
+                    <label for="initial-stock">Cantidad inicial en stock:</label>
+                    <input type="number" id="initial-stock" required>
+                    <button type="submit">Agregar Producto</button>
+                </form>
+            </section>
+
+            <!-- Actualizar Stock -->
+            <section id="update-stock-section" class="section hidden">
+                <h2>Actualizar Stock</h2>
+                <form id="update-product-form">
+                    <input type="text" name="nombre" placeholder="Nombre del producto" />
+                    <textarea name="descripcion" placeholder="Descripción del producto"></textarea>
+                    <input type="number" name="precio_compra" placeholder="Precio de compra" />
+                    <input type="number" name="precio_venta" placeholder="Precio de venta" />
+                    <input type="number" name="stock" placeholder="Stock" />
+                    <textarea name="notas" placeholder="Notas adicionales o detalles de la actualización"></textarea>
+                    <button type="submit">Actualizar Producto</button>
+                </form>
+            </section>
+
+            <!-- Ventas -->
+            <section id="sales-section" class="section hidden">
+                <h2>Ventas</h2>
+                <form>
+                    <label for="product-to-sell">Producto a vender:</label>
+                    <input type="text" id="product-to-sell" placeholder="Buscar producto por nombre" required>
+                    <label for="sell-quantity">Cantidad a vender:</label>
+                    <input type="number" id="sell-quantity" required>
+                    <button type="submit">Registrar Venta</button>
+                </form>
+                <div id="sales-list">
+                    <h3>Registro de Ventas</h3>
+                    <ul id="sales-record">
+                        <!-- Ventas se listarán aquí -->
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Pérdidas -->
+            <section id="losses-section" class="section hidden">
+                <h2>Pérdidas</h2>
+                <form>
+                    <label for="loss-category">Categoría de Pérdida:</label>
+                    <select id="loss-category">
+                        <option value="proveedor">Por Proveedor</option>
+                        <option value="personal">Por Personal</option>
+                    </select>
+                    <label for="loss-details">Detalles:</label>
+                    <textarea id="loss-details" placeholder="Explica brevemente la causa"></textarea>
+                    <button type="submit">Registrar Pérdida</button>
+                </form>
+                <div id="loss-list">
+                    <h3>Historial de Pérdidas</h3>
+                    <ul id="loss-record">
+                        <!-- Las pérdidas se mostrarán aquí -->
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Reportes -->
+            <section id="reports-section" class="section hidden">
+                <h2>Reportes de Inventario</h2>
+                <button id="generate-report-btn">Generar Reporte de Inventario (PDF)</button>
+                <div id="report-content" class="hidden">
+                    <h3>Reporte de Inventario</h3>
+                    <pre id="report-details"></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="public/js/scripts.js"></script>
+</body>
+</html>

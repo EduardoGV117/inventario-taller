@@ -45,7 +45,7 @@ passport.use(
     {
       clientID: '757116200337-9n45nj3gdjvkiappi401g9pphsr6j975.apps.googleusercontent.com',
       clientSecret: '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',
-      callbackURL: 'http://35.202.169.169:3000/auth/callback', // Ruta de redirección
+      callbackURL: 'https://bajacar.net/auth/callback', // Ruta de redirección
     },
     (accessToken, refreshToken, profile, done) => {
       const email = profile.emails[0].value;

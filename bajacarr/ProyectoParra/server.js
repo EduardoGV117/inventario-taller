@@ -39,6 +39,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+//AQUI VAN CAMBIOS.
 // Configurar Google OAuth 2.0
 passport.use(
   new GoogleStrategy(

@@ -1,13 +1,16 @@
 const express = require('express');
 const { Client } = require('pg');
 const bodyParser = require('body-parser');
-const path = require('path');  // Asegúrate de requerir 'path'
+const path = require('path');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 
 const app = express();
 const port = 3000;
+
+// Lista de correos permitidos
+const allowedEmails = ['vejar001@gmail.com', 'l20212934@tectijuana.edu.mx'];
 
 // Configurar el cliente PostgreSQL
 const client = new Client({
@@ -20,28 +23,40 @@ const client = new Client({
 
 client.connect();
 
-app.use(bodyParser.json());  // Para leer datos JSON desde el frontend
-app.use(express.static('public'));  // Servir archivos estáticos (HTML, CSS, JS)
+app.use(bodyParser.json());
+app.use(express.static('public'));
 
 // Configurar sesiones para manejar el estado del usuario
-app.use(session({
-  secret: 'tu_secreto_seguro', // Cambia esto por algo más seguro
-  resave: false,
-  saveUninitialized: true,
-}));
+app.use(
+  session({
+    secret: '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', // Cambia esto por algo más seguro
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
-// Inicializar Passport para autenticación
+// Inicializar Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Configurar Google OAuth 2.0
-passport.use(new GoogleStrategy({
-  clientID: '757116200337-9n45nj3gdjvkiappi401g9pphsr6j975.apps.googleusercontent.com', // Reemplaza con tu Client ID
-  clientSecret: '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', // Reemplaza con tu Client Secret
-  callbackURL: 'http://35.202.169.169:3000//auth/callback', // Ruta de redirección
-}, (accessToken, refreshToken, profile, done) => {
-  done(null, profile); // Puedes personalizar cómo manejar el perfil del usuario aquí
-}));
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: '757116200337-9n45nj3gdjvkiappi401g9pphsr6j975.apps.googleusercontent.com',
+      clientSecret: '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',
+      callbackURL: 'http://35.202.169.169:3000/auth/callback', // Ruta de redirección
+    },
+    (accessToken, refreshToken, profile, done) => {
+      const email = profile.emails[0].value;
+      if (allowedEmails.includes(email)) {
+        return done(null, profile); // Usuario autorizado
+      } else {
+        return done(null, false, { message: 'Correo no autorizado' }); // Usuario no autorizado
+      }
+    }
+  )
+);
 
 // Serialización y deserialización de usuario
 passport.serializeUser((user, done) => done(null, user));
@@ -52,31 +67,37 @@ const ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/auth/google'); // Redirige a la autenticación si no está autenticado
+  res.redirect('/auth/google');
 };
 
 // Ruta para iniciar sesión con Google
-app.get('/auth/google', passport.authenticate('google', {
-  scope: ['profile', 'email'],
-}));
+app.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+  })
+);
 
 // Callback después de la autenticación
-app.get('/auth/callback', passport.authenticate('google', { failureRedirect: '/' }),
+app.get(
+  '/auth/callback',
+  passport.authenticate('google', { failureRedirect: '/unauthorized' }),
   (req, res) => {
     res.redirect('/'); // Redirige al inicio después de autenticarse
-  });
+  }
+);
 
-// Ruta para cerrar sesión
-app.get('/logout', (req, res) => {
-  req.logout(() => res.redirect('/')); // Cierra sesión y redirige
+// Página de error para usuarios no autorizados
+app.get('/unauthorized', (req, res) => {
+  res.status(403).send('Acceso denegado: tu correo no está autorizado.');
 });
 
-// Ruta para servir la página principal (protegida)
+// Ruta principal protegida
 app.get('/', ensureAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'pagina.html'));
 });
 
-// API para obtener productos (protegida)
+// Otras APIs (protegidas)
 app.get('/productos', ensureAuthenticated, async (req, res) => {
   try {
     const result = await client.query('SELECT * FROM Productos');
@@ -84,36 +105,6 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Error al obtener productos');
-  }
-});
-
-// API para agregar producto (protegida)
-app.post('/productos', ensureAuthenticated, async (req, res) => {
-  const { nombre_producto, categoria, precio_compra, precio_venta, stock_actual, descripcion } = req.body;
-  try {
-    const result = await client.query(
-      'INSERT INTO Productos (nombre_producto, categoria, precio_compra, precio_venta, stock_actual, descripcion) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [nombre_producto, categoria, precio_compra, precio_venta, stock_actual, descripcion]
-    );
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error al agregar el producto');
-  }
-});
-
-// API para registrar venta (protegida)
-app.post('/ventas', ensureAuthenticated, async (req, res) => {
-  const { id_producto, cantidad, total, id_usuario } = req.body;
-  try {
-    const result = await client.query(
-      'INSERT INTO Ventas (id_producto, cantidad, total, id_usuario) VALUES ($1, $2, $3, $4) RETURNING *',
-      [id_producto, cantidad, total, id_usuario]
-    );
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error al registrar la venta');
   }
 });
 

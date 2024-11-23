@@ -101,15 +101,17 @@ app.get('/', ensureAuthenticated, (req, res) => {
 // Otras APIs (protegidas)
 app.get('/productos', ensureAuthenticated, async (req, res) => {
   try {
-    const result = await client.query('SELECT * FROM Productos');
-    res.json(result.rows);
+    const result = await client.query('SELECT * FROM productos');
+    res.json(result.rows); // Devuelve los datos como JSON
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Error al obtener productos');
+    console.error('Error al obtener los productos:', err);
+    res.status(500).send('Error al obtener los productos');
   }
 });
+
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor escuchando en http://0.0.0.0:${port}`);
 });
+

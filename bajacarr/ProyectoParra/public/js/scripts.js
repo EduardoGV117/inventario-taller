@@ -16,22 +16,32 @@ navBtns.forEach(btn => {
   });
 });
 
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Función para cargar productos
-  async function cargarProductos() {
-    const response = await fetch('/productos');
-    const productos = await response.json();
-    const listaProductos = document.getElementById('productos-lista'); // Aquí es donde se mostrarán los productos
+  const cargarProductos = async () => {
+    try {
+      const response = await fetch('/productos');
+      if (!response.ok) throw new Error('Error al cargar productos');
+      
+      const productos = await response.json();
+      const listaProductos = document.getElementById('productos-lista');
+      listaProductos.innerHTML = ''; // Limpia la lista antes de añadir nuevos elementos
 
-    productos.forEach(producto => {
-      const item = document.createElement('li');
-      item.textContent = `${producto.nombre_producto} - $${producto.precio_venta}`;
-      listaProductos.appendChild(item);
-    });
-  }
+      productos.forEach(producto => {
+        const item = document.createElement('li');
+        item.textContent = `${producto.nombre_producto} - $${producto.precio_venta} (Stock: ${producto.stock_actual})`;
+        listaProductos.appendChild(item);
+      });
+    } catch (error) {
+      console.error('Error cargando productos:', error);
+    }
+  };
 
-  cargarProductos(); // Cargar los productos cuando la página se cargue
+  // Carga los productos cuando se selecciona la sección de inventario
+  const inventoryBtn = document.querySelector('[data-target="inventory-section"]');
+  inventoryBtn.addEventListener('click', cargarProductos);
 });
+
 
 document.querySelector('#add-product-section form').addEventListener('submit', async (e) => {
   e.preventDefault();

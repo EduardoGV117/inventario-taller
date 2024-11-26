@@ -20,28 +20,50 @@ navBtns.forEach(btn => {
 document.addEventListener('DOMContentLoaded', () => {
   const cargarProductos = async () => {
     try {
-      const response = await fetch('/productos');
+      const response = await fetch('/productos'); // Ajusta la URL según tu endpoint
       if (!response.ok) throw new Error('Error al cargar productos');
       
       const productos = await response.json();
-      const listaProductos = document.getElementById('productos-lista');
-      listaProductos.innerHTML = ''; // Limpia la lista antes de añadir nuevos elementos
+      mostrarProductosEnTabla(productos);
 
-      productos.forEach(producto => {
-        const item = document.createElement('li');
-        item.textContent = `${producto.nombre_producto} - $${producto.precio_venta} (Stock: ${producto.stock_actual})`;
-        listaProductos.appendChild(item);
+      // Evento para el filtro en tiempo real
+      const searchBox = document.getElementById('search-box');
+      searchBox.addEventListener('input', () => {
+        const filtro = searchBox.value.toLowerCase();
+        const productosFiltrados = productos.filter(producto => 
+          producto.nombre_producto.toLowerCase().includes(filtro)
+        );
+        mostrarProductosEnTabla(productosFiltrados);
       });
+
     } catch (error) {
-      console.error('Error cargando productos:', error);
+      console.error(error.message);
     }
   };
 
-  // Carga los productos cuando se selecciona la sección de inventario
-  const inventoryBtn = document.querySelector('[data-target="inventory-section"]');
-  inventoryBtn.addEventListener('click', cargarProductos);
-});
+  const mostrarProductosEnTabla = (productos) => {
+    const tabla = document.getElementById('inventory-table').querySelector('tbody');
+    tabla.innerHTML = ''; // Limpia el contenido anterior
 
+    productos.forEach(producto => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${producto.id_producto}</td>
+        <td>${producto.nombre_producto}</td>
+        <td>${producto.categoria}</td>
+        <td>${producto.precio_compra}</td>
+        <td>${producto.precio_venta}</td>
+        <td>${producto.stock_actual}</td>
+        <td>${producto.descripcion}</td>
+        <td>${producto.fecha_creacion}</td>
+        <td>${producto.fecha_actualizacion}</td>
+      `;
+      tabla.appendChild(fila);
+    });
+  };
+
+  cargarProductos();
+});
 
 document.querySelector('#add-product-section form').addEventListener('submit', async (e) => {
   e.preventDefault();

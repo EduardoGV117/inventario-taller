@@ -49,12 +49,37 @@
                 <p>Explora las opciones en la barra lateral para comenzar.</p>
             </section>
 
-            <!-- inventario -->
             <section id="inventory-section" class="section hidden">
                 <h2>INVENTARIO BAJACAR</h2>
-                <ul id="productos-lista"></ul> <!-- Aquí se mostrarán los productos -->
+                <!-- Input para buscar productos -->
+                <div>
+                  <input 
+                    type="text" 
+                    id="search-box" 
+                    placeholder="Buscar por nombre de producto..." 
+                    style="margin-bottom: 10px; width: 100%; padding: 10px; font-size: 16px;"
+                  />
+                </div>
+                <!-- Tabla para mostrar los productos -->
+                <table id="inventory-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                  <thead>
+                    <tr>
+                      <th>ID Producto</th>
+                      <th>Nombre</th>
+                      <th>Categoría</th>
+                      <th>Precio Compra</th>
+                      <th>Precio Venta</th>
+                      <th>Stock</th>
+                      <th>Descripción</th>
+                      <th>Fecha Creación</th>
+                      <th>Fecha Actualización</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Aquí se llenarán las filas dinámicamente -->
+                  </tbody>
+                </table>
               </section>
-              
 
             <!-- Agregar Producto -->
             <section id="add-product-section" class="section hidden">

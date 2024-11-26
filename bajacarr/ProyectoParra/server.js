@@ -10,7 +10,7 @@ const app = express();
 const port = 3000;
 
 // Lista de correos permitidos
-const allowedEmails = ['vejar001@gmail.com', 'l20212934@tectijuana.edu.mx'];
+const allowedEmails = ['vejar001@gmail.com', 'l20212934@tectijuana.edu.mx', 'yahir.sanchez201@tectijuana.edu.mx', 'victor.millan19@tectijuana.edu.mx', 'l20212407@tectijuana.edu.mx'];
 
 // Configurar el cliente PostgreSQL
 const client = new Client({

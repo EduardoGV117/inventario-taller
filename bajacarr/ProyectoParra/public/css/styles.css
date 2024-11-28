@@ -35,79 +35,73 @@ body {
 
 
 
-.title {
-    font-size: 24px;
-    font-weight: bold;
-}
+
 /* Header */
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Asegura que el contenido esté centrado verticalmente */
+    align-items: center; /* Centra todo verticalmente */
     padding: 10px 20px;
     background-color: var(--secondary-color);
     border-bottom: 2px solid var(--highlight-color);
-    position: relative;
-    height: 50px; /* Mantener la altura de la barra */
+    height: 50px; /* Mantener la altura de la barra fija */
 }
 
 /* Logo (Imagen) */
 .logo {
     width: auto;
-    height: 30px; /* Ajusta el tamaño de la imagen para que se acomode */
+    height: 30px; /* Ajustamos el tamaño del logo */
     margin-right: 10px; /* Espacio entre el logo y el título */
+    position: absolute;
+    left: 20px; /* Ubicación en la parte izquierda */
 }
 
-/* Eliminar los controles de ventana (puntos) */
-.window-controls {
-    display: none; /* Esto quita los puntitos de control */
+/* Título de la aplicación */
+.title {
+    margin-left: 60px; /* Espacio para evitar que se sobreponga con el logo */
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
 }
 
-/* Contenedor del usuario (Asegura que el botón esté dentro de la barra) */
+/* Contenedor del usuario */
 #user-container {
-    position: absolute; /* Lo sacamos de flujo normal para que no afecte la altura del contenedor */
-    right: 10px;
-    top: 10px; /* Ajustamos la posición dentro de la barra */
+    position: absolute; /* Lo sacamos del flujo normal */
+    right: 20px; /* Coloca el botón en la esquina superior derecha */
+    top: 10px; /* Alineado con el borde superior de la barra */
 }
 
 /* Botón de usuario */
 .user-button {
-    width: 50px; /* Aumentamos un poquito el tamaño */
-    height: 50px; /* Mantenemos el aspecto redondeado */
+    width: 40px; /* Ajusta el tamaño del botón */
+    height: 40px; /* Tamaño de botón redondeado */
     border-radius: 50%;
     background-color: #6A0DAD; /* Color morado */
     color: white;
-    font-size: 22px; /* Aumentamos el tamaño de la letra */
+    font-size: 20px;
     text-align: center;
-    line-height: 50px; /* Asegura que el texto esté centrado */
+    line-height: 40px;
     cursor: pointer;
     border: none;
-    z-index: 2; /* Asegura que esté por encima del dropdown */
 }
 
-/* Dropdown oculto */
+/* Dropdown del usuario */
 .user-dropdown {
     display: none;
     position: absolute;
-    right: 10px;
-    top: 55px; /* Ajustamos para que se vea debajo del botón */
+    right: 0;
+    top: 50px; /* Ubica el dropdown debajo del botón */
     background: white;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 10px;
-    z-index: 1; /* Asegura que esté por debajo del botón */
+    z-index: 1;
 }
 
 /* Dropdown visible */
 .user-dropdown.show {
     display: block;
-}
-
-/* Estilo de la información */
-.user-dropdown p {
-    margin: 5px 0;
-    font-size: 14px;
 }
 
 /* Estilo del botón de cerrar sesión */

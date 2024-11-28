@@ -131,3 +131,59 @@ document.querySelector('#sales-section form').addEventListener('submit', async (
   }
 });
 
+// Cargar cliente de Google
+function handleClientLoad() {
+  gapi.load('auth2', function() {
+      gapi.auth2.init({
+          client_id: '757116200337-9n45nj3gdjvkiappi401g9pphsr6j975.apps.googleusercontent.com',
+      }).then(function() {
+          // Si el usuario ya está logueado, mostramos su información
+          const authInstance = gapi.auth2.getAuthInstance();
+          if (authInstance.isSignedIn.get()) {
+              onSignIn(authInstance.currentUser.get());
+          }
+      });
+  });
+}
+
+// Manejar el inicio de sesión
+function onSignIn(googleUser) {
+  const profile = googleUser.getBasicProfile();
+  const userId = profile.getId();  // ID del usuario de Google
+  const userEmail = profile.getEmail();  // Correo del usuario
+  const userInitial = profile.getGivenName().charAt(0).toUpperCase();  // Inicial del usuario
+
+  // Mostrar la inicial y el correo del usuario
+  document.getElementById('user-initial').textContent = userInitial;
+  document.getElementById('user-email').textContent = userEmail;
+  document.getElementById('user-email').href = `mailto:${userEmail}`;
+  document.getElementById('user-dropdown').style.display = 'block';
+
+  // Enviar el ID del usuario a tu servidor para guardarlo en la base de datos
+  fetch('/guardar-usuario', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId: userId, email: userEmail })
+  }).then(response => response.json())
+    .then(data => console.log('Usuario guardado:', data))
+    .catch(error => console.error('Error al guardar el usuario:', error));
+}
+
+// Manejar cierre de sesión
+function signOut() {
+  const authInstance = gapi.auth2.getAuthInstance();
+  authInstance.signOut().then(function () {
+      console.log('Usuario desconectado');
+      document.getElementById('user-initial').textContent = '';
+      document.getElementById('user-dropdown').style.display = 'none';
+  });
+}
+
+// Asociar el evento de cierre de sesión al botón
+document.getElementById('logout-btn').addEventListener('click', signOut);
+
+// Inicializar cliente de Google
+handleClientLoad();
+

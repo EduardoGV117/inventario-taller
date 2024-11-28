@@ -108,6 +108,22 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
     res.status(500).send('Error al obtener los productos');
   }
 });
+// Ruta para guardar el ID de usuario y correo en la base de datos
+app.post('/guardar-usuario', async (req, res) => {
+  const { userId, email } = req.body;
+  try {
+      // Verificar si el usuario ya existe en la base de datos
+      const result = await client.query('SELECT * FROM Usuarios WHERE google_id = $1', [userId]);
+      if (result.rows.length === 0) {
+          // Si no existe, lo agregamos
+          await client.query('INSERT INTO Usuarios (google_id, email) VALUES ($1, $2)', [userId, email]);
+      }
+      res.status(200).json({ message: 'Usuario guardado correctamente' });
+  } catch (err) {
+      console.error('Error al guardar el usuario:', err);
+      res.status(500).send('Error al guardar el usuario');
+  }
+});
 
 
 // Iniciar servidor

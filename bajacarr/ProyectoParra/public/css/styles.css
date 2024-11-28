@@ -66,6 +66,7 @@ body {
     position: relative;
 }
 
+/* Usuario */
 .user-initial {
     background-color: var(--highlight-color);
     border-radius: 50%;
@@ -103,7 +104,6 @@ body {
 .dropdown li a:hover {
     background-color: var(--highlight-color);
 }
-
 /* Contenedor principal */
 .container {
     display: flex;

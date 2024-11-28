@@ -149,6 +149,50 @@ body {
 #logout-button:hover {
     background: #c9302c;
 }
+
+/* Estilo de la tabla de productos */
+#products-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  #products-table th, #products-table td {
+    padding: 10px;
+    border: 1px solid var(--highlight-color);
+    text-align: center;
+    color: var(--text-color);
+  }
+  
+  #products-table th {
+    background-color: var(--highlight-color);
+  }
+  
+  #products-table tbody tr:hover {
+    background-color: var(--highlight-hover);
+    color: var(--bg-color);
+  }
+  
+  /* Botones de acciones */
+  #stock-actions button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: var(--highlight-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #stock-actions button:hover {
+    background-color: var(--highlight-hover);
+    color: var(--bg-color);
+  }
+
+
+
+
+
 /* Contenedor principal */
 .container {
     display: flex;

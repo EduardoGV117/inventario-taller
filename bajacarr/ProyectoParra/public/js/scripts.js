@@ -16,6 +16,93 @@ navBtns.forEach(btn => {
   });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+  const productsTableBody = document.querySelector('#products-table tbody');
+  const selectAllCheckbox = document.getElementById('select-all');
+  const updateStockButton = document.getElementById('update-stock');
+  const deleteProductsButton = document.getElementById('delete-products');
+
+  // Cargar productos desde la API
+  const loadProducts = async (query = '') => {
+    const response = await fetch(`/productos/buscar?nombre_producto=${query}`);
+    const products = await response.json();
+    renderProducts(products);
+  };
+
+  // Renderizar productos en la tabla
+  const renderProducts = (products) => {
+    productsTableBody.innerHTML = '';
+    products.forEach((product) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><input type="checkbox" data-id="${product.id_producto}" /></td>
+        <td>${product.nombre_producto}</td>
+        <td>${product.categoria}</td>
+        <td>${product.precio_compra}</td>
+        <td>${product.precio_venta}</td>
+        <td>${product.stock_actual}</td>
+        <td>
+          <button class="update-stock-btn" data-id="${product.id_producto}">Actualizar Stock</button>
+        </td>
+      `;
+      productsTableBody.appendChild(row);
+    });
+  };
+
+  // Manejar búsqueda
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    loadProducts(query);
+  });
+
+  // Manejar actualización de stock
+  updateStockButton.addEventListener('click', async () => {
+    const selected = [...document.querySelectorAll('#products-table tbody input[type="checkbox"]:checked')];
+    const updates = selected.map((checkbox) => {
+      const id = checkbox.dataset.id;
+      const amount = prompt(`¿Cuánto deseas agregar al stock del producto ${id}?`);
+      return { id, amount: parseInt(amount, 10) };
+    });
+
+    for (const update of updates) {
+      await fetch('/productos/actualizar-stock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_producto: update.id, cantidad: update.amount }),
+      });
+    }
+
+    loadProducts();
+  });
+
+  // Manejar eliminación de productos
+  deleteProductsButton.addEventListener('click', async () => {
+    const selected = [...document.querySelectorAll('#products-table tbody input[type="checkbox"]:checked')];
+    const ids = selected.map((checkbox) => checkbox.dataset.id);
+
+    for (const id of ids) {
+      await fetch('/productos/eliminar', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_producto: id }),
+      });
+    }
+
+    loadProducts();
+  });
+
+  // Seleccionar/deseleccionar todos los checkboxes
+  selectAllCheckbox.addEventListener('change', (e) => {
+    const checkboxes = document.querySelectorAll('#products-table tbody input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => (checkbox.checked = e.target.checked));
+  });
+
+  // Inicializar con todos los productos
+  loadProducts();
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {

@@ -132,34 +132,36 @@
 
             <!-- Actualizar Stock -->
            <!-- Actualizar Stock (sección que se ocultará inicialmente) -->
-            <section id="updateStockForm" class="section hidden">
-                <h2>Actualizar Stock</h2>
-                <!-- Campo para buscar productos -->
-                <div id="searchStockContainer">
-                    <input type="text" id="productSearch" placeholder="Buscar producto..." />
-                    <button id="searchButton">Buscar</button>
-                    
-                    <table id="productTable">
-                        <thead>
-                            <tr>
-                                <th>Seleccionar</th>
-                                <th>Nombre Producto</th>
-                                <th>Categoría</th>
-                                <th>Precio Compra</th>
-                                <th>Precio Venta</th>
-                                <th>Stock Actual</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <!-- Campo para actualizar stock -->
-                <div id="updateFields">
-                    <h3>Actualizar Stock</h3>
-                    <input type="number" id="stockQuantity" placeholder="Cantidad a agregar" />
-                    <button id="submitStockUpdate">Actualizar Stock</button>
-                </div>
-            </section>
+           <div id="stock-management" class="section">
+            <h2>Gestión de Stock</h2>
+            <!-- Barra de búsqueda -->
+            <form id="search-form">
+              <input type="text" id="search-input" placeholder="Buscar producto por nombre" />
+              <button type="submit">Buscar</button>
+            </form>
+            
+            <!-- Tabla de productos -->
+            <table id="products-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="select-all" /></th>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Precio Compra</th>
+                  <th>Precio Venta</th>
+                  <th>Stock</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          
+            <!-- Botones de acciones -->
+            <div id="stock-actions">
+              <button id="update-stock">Actualizar Stock</button>
+              <button id="delete-products">Eliminar Seleccionados</button>
+            </div>
+          </div>
                         
             <!-- Ventas -->
             <section id="sales-section" class="section hidden">

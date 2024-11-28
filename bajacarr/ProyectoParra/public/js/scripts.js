@@ -59,12 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// Maneja la búsqueda de productos
-document.getElementById("searchButton").addEventListener("click", async () => {
-  const searchTerm = document.getElementById("productSearch").value;
-  const products = await searchProducts(searchTerm);
-  renderProductList(products);
-});
 
 // Busca productos en el servidor
 async function searchProducts(searchTerm) {
@@ -73,13 +67,11 @@ async function searchProducts(searchTerm) {
   return data;
 }
 
-// Función para realizar la búsqueda de productos
 document.getElementById("searchButton").addEventListener("click", async () => {
-  const searchTerm = document.getElementById("productSearch").value;
-  const products = await searchProducts(searchTerm);
-  renderProductTable(products);
+    const searchTerm = document.getElementById("productSearch").value;
+    const products = await searchProducts(searchTerm);
+    renderProductTable(products); // Cambia renderProductList por renderProductTable
 });
-
 // Busca productos en el servidor
 async function searchProducts(searchTerm) {
   const response = await fetch(`/productos/buscar?nombre_producto=${searchTerm}`);

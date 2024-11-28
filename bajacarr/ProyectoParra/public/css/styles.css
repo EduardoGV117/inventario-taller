@@ -21,16 +21,7 @@ body {
     color: var(--text-color);
 }
 
-/* Header */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: var(--secondary-color);
-    border-bottom: 2px solid var(--highlight-color);
-    position: relative;
-}
+
 
 .window-controls {
     display: flex;
@@ -61,70 +52,80 @@ body {
     font-size: 24px;
     font-weight: bold;
 }
-/* Contenedor del usuario */
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Asegura que el contenido esté centrado verticalmente */
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    border-bottom: 2px solid var(--highlight-color);
+    position: relative;
+    height: 50px; /* Ajustamos la altura de la barra */
+}
+
+/* Contenedor del usuario (Asegura que el botón esté dentro de la barra) */
 #user-container {
-    position: relative; /* Necesario para posicionar el botón dentro de este contenedor */
-    height: 80px; /* Añadimos un poco de espacio para que el botón no se superponga con el dropdown */
-  }
-  
-  /* Botón de usuario */
-  .user-button {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #6A0DAD; /* Color morado */
-      color: white;
-      font-size: 18px;
-      text-align: center;
-      line-height: 40px;
-      cursor: pointer;
-      border: none;
-      position: absolute; /* Lo posicionamos dentro del contenedor */
-      top: 0; /* Colocamos el botón en la parte superior */
-      right: 10px; /* Ajustamos al borde derecho */
-      z-index: 2; /* Asegura que esté por encima del dropdown */
-  }
-  
-  /* Dropdown oculto */
-  .user-dropdown {
-      display: none;
-      position: absolute;
-      right: 10px;
-      top: 35px; /* Ajusta el top para que quede debajo del botón */
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-  /*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-      padding: 10px;
-      z-index: 1; /* Asegura que esté por debajo del botón */
-  }
-  
-  /* Dropdown visible */
-  .user-dropdown.show {
-      display: block;
-  }
-  
-  /* Estilo de la información */
-  .user-dropdown p {
-      margin: 5px 0;
-      font-size: 14px;
-  }
-  
-  /* Estilo del botón de cerrar sesión */
-  #logout-button {
-      display: block;
-      margin-top: 10px;
-      padding: 5px 10px;
-      background: #d9534f;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-  }
-  
-  #logout-button:hover {
-      background: #c9302c;
-  }
+    position: absolute; /* Lo sacamos de flujo normal para que no afecte la altura del contenedor */
+    right: 10px;
+    top: 10px; /* Ajustamos la posición dentro de la barra */
+}
+
+/* Botón de usuario */
+.user-button {
+    width: 50px; /* Aumentamos un poquito el tamaño */
+    height: 50px; /* Mantenemos el aspecto redondeado */
+    border-radius: 50%;
+    background-color: #6A0DAD; /* Color morado */
+    color: white;
+    font-size: 22px; /* Aumentamos el tamaño de la letra */
+    text-align: center;
+    line-height: 50px; /* Asegura que el texto esté centrado */
+    cursor: pointer;
+    border: none;
+    z-index: 2; /* Asegura que esté por encima del dropdown */
+}
+
+/* Dropdown oculto */
+.user-dropdown {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 55px; /* Ajustamos para que se vea debajo del botón */
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1; /* Asegura que esté por debajo del botón */
+}
+
+/* Dropdown visible */
+.user-dropdown.show {
+    display: block;
+}
+
+/* Estilo de la información */
+.user-dropdown p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Estilo del botón de cerrar sesión */
+#logout-button {
+    display: block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#logout-button:hover {
+    background: #c9302c;
+}
 /* Contenedor principal */
 .container {
     display: flex;

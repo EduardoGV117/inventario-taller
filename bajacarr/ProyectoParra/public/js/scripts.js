@@ -73,23 +73,45 @@ async function searchProducts(searchTerm) {
   return data;
 }
 
-// Renderiza la lista de productos con checkboxes
-function renderProductList(products) {
-  const productListDiv = document.getElementById("productList");
-  productListDiv.innerHTML = ''; // Limpiar lista anterior
+// Función para realizar la búsqueda de productos
+document.getElementById("searchButton").addEventListener("click", async () => {
+  const searchTerm = document.getElementById("productSearch").value;
+  const products = await searchProducts(searchTerm);
+  renderProductTable(products);
+});
+
+// Busca productos en el servidor
+async function searchProducts(searchTerm) {
+  const response = await fetch(`/productos/buscar?nombre_producto=${searchTerm}`);
+  const data = await response.json();
+  return data;
+}
+
+// Renderiza la tabla de productos con checkboxes
+function renderProductTable(products) {
+  const tableBody = document.getElementById("productTable").querySelector("tbody");
+  tableBody.innerHTML = ''; // Limpiar tabla antes de agregar nuevos resultados
+
+  if (products.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6">No se encontraron productos.</td></tr>';
+      return;
+  }
 
   products.forEach(product => {
-      const div = document.createElement("div");
-      div.innerHTML = `
-          <input type="radio" name="product" class="productCheckbox" data-id="${product.id_producto}" />
-          <label>${product.nombre_producto} - ${product.categoria} - ${product.precio_venta}</label>
+      const row = document.createElement("tr");
+      row.innerHTML = `
+          <td><input type="checkbox" class="productCheckbox" data-id="${product.id_producto}" /></td>
+          <td>${product.nombre_producto}</td>
+          <td>${product.categoria}</td>
+          <td>${product.precio_compra}</td>
+          <td>${product.precio_venta}</td>
+          <td>${product.stock_actual}</td>
       `;
-      productListDiv.appendChild(div);
+      tableBody.appendChild(row);
   });
 
-  // Añadir evento para cuando se seleccione un producto
-  const checkboxes = document.querySelectorAll('.productCheckbox');
-  checkboxes.forEach(checkbox => {
+  // Event listeners para los checkboxes
+  document.querySelectorAll('.productCheckbox').forEach(checkbox => {
       checkbox.addEventListener('change', (event) => {
           const selectedCheckbox = event.target;
           if (selectedCheckbox.checked) {
@@ -105,48 +127,24 @@ function showUpdateFields(productId) {
   document.getElementById("updateFields").style.display = "block";
   document.getElementById("submitStockUpdate").setAttribute("data-product-id", productId);
 }
-
-// Maneja la actualización del stock
-document.getElementById("submitStockUpdate").addEventListener("click", async (event) => {
-  const productId = event.target.getAttribute("data-product-id");
-  const stockQuantity = document.getElementById("stockQuantity").value;
-
-  const response = await fetch(`/productos/actualizar-stock`, {
+document.getElementById("submitStockUpdate").addEventListener("click", async () => {
+  const productId = document.getElementById("submitStockUpdate").getAttribute("data-product-id");
+  const quantity = document.getElementById("stockQuantity").value;
+  
+  // Enviar la actualización de stock al servidor
+  const response = await fetch('/productos/actualizar-stock', {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-          id_producto: productId,
-          cantidad: parseInt(stockQuantity),
-      }),
+      body: JSON.stringify({ id_producto: productId, cantidad: quantity })
   });
 
   const result = await response.json();
   if (result.success) {
-      alert("Stock actualizado correctamente");
+      alert('Stock actualizado correctamente');
   } else {
-      alert("Error al actualizar stock");
-  }
-});
-
-// Maneja la eliminación de productos
-document.getElementById("deleteProductButton").addEventListener("click", async () => {
-  const productId = document.getElementById("submitStockUpdate").getAttribute("data-product-id");
-
-  const response = await fetch(`/productos/eliminar`, {
-      method: 'DELETE',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id_producto: productId }),
-  });
-
-  const result = await response.json();
-  if (result.success) {
-      alert("Producto eliminado correctamente");
-  } else {
-      alert("Error al eliminar producto");
+      alert('Error al actualizar stock');
   }
 });
 document.addEventListener('DOMContentLoaded', () => {

@@ -60,7 +60,13 @@ body {
     left: 20px; /* Alineación del logo en la parte izquierda */
     top: 10px;  /* Un poco de espacio desde la parte superior */
 }
-
+/* Estilo para el logo grande en Home */
+#home-section .logo-large {
+    width: 100%; /* Para que el logo ocupe todo el ancho del contenedor */
+    max-width: 400px; /* Limitar el tamaño máximo del logo */
+    margin: 20px auto; /* Centrado y espaciado alrededor */
+    display: block;
+}
 /* Header */
 .header {
     display: flex;

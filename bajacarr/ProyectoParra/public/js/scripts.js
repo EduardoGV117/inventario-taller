@@ -1,21 +1,47 @@
-const navBtns = document.querySelectorAll('.nav-btn');
-const sections = document.querySelectorAll('.section');
+document.addEventListener('DOMContentLoaded', () => {
+  // Activamos la sección Home por defecto
+  const homeSection = document.getElementById('home-section');
+  homeSection.classList.add('active-section');
 
-navBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const targetSectionId = btn.dataset.target;
-    const targetSection = document.getElementById(targetSectionId);
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.section');
 
-    // Remove the active class from all sections
-    sections.forEach(section => {
-      section.classList.remove('active-section');
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetSectionId = btn.dataset.target;
+      const targetSection = document.getElementById(targetSectionId);
+
+      // Remove the active class from all sections
+      sections.forEach(section => {
+        section.classList.remove('active-section');
+      });
+
+      // Add the active class to the target section
+      targetSection.classList.add('active-section');
     });
-
-    // Add the active class to the target section
-    targetSection.classList.add('active-section');
   });
-});
+document.addEventListener('DOMContentLoaded', () => {
+  // Activamos la sección Home por defecto
+  const homeSection = document.getElementById('home-section');
+  homeSection.classList.add('active-section');
 
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.section');
+
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetSectionId = btn.dataset.target;
+      const targetSection = document.getElementById(targetSectionId);
+
+      // Remove the active class from all sections
+      sections.forEach(section => {
+        section.classList.remove('active-section');
+      });
+
+      // Add the active class to the target section
+      targetSection.classList.add('active-section');
+    });
+  });
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {

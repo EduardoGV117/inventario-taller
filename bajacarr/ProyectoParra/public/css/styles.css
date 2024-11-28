@@ -62,63 +62,7 @@ body {
     font-weight: bold;
 }
 
-.user-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-  }
-  
-  .user-initial {
-    background-color: #6a0dad; /* Morado */
-    color: white; /* Texto blanco para contraste */
-    font-size: 24px; /* Tamaño más grande */
-    font-weight: bold; /* Texto en negritas */
-    border-radius: 50%;
-    width: 50px; /* Asegúrate de que el tamaño sea suficiente */
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .user-initial:hover {
-    transform: scale(1.1);
-  }
-  
-  .dropdown {
-    position: absolute;
-    top: 60px; /* Ajusta según el tamaño del header */
-    right: 10px; /* Separación desde el borde derecho */
-    background-color: #272727; /* Fondo oscuro */
-    border: 1px solid #6a0dad; /* Borde morado */
-    border-radius: 8px;
-    padding: 10px;
-    display: none; /* Oculto por defecto */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombras */
-  }
-  
-  .dropdown ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .dropdown li {
-    margin: 5px 0;
-  }
-  
-  .dropdown li a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-  }
-  
-  .dropdown li a:hover {
-    color: #6a0dad; /* Color morado al pasar el cursor */
-  }
+
 /* Botón de usuario */
 .user-button {
     width: 40px;

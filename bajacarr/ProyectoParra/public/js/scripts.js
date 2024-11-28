@@ -152,7 +152,7 @@ document.getElementById("deleteProductButton").addEventListener("click", async (
 document.addEventListener('DOMContentLoaded', () => {
   const cargarProductos = async () => {
     try {
-      const response = await fetch('/productos'); // Ajusta la URL según tu endpoint
+      const response = await fetch('/productos/insertar-producto'); // Ajusta la URL según tu endpoint
       if (!response.ok) throw new Error('Error al cargar productos');
       
       const productos = await response.json();

@@ -149,6 +149,21 @@ app.get('/logout', (req, res) => {
   });
 });
 
+// API para agregar producto
+app.post('/productos/insertar-producto', async (req, res) => {
+  const { nombre_producto, categoria, precio_compra, precio_venta, stock_actual, descripcion } = req.body;
+  try {
+    const result = await client.query(
+      'INSERT INTO Productos (nombre_producto, categoria, precio_compra, precio_venta, stock_actual, descripcion) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [nombre_producto, categoria, precio_compra, precio_venta, stock_actual, descripcion]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al agregar el producto');
+  }
+});
+
 // Otras APIs (protegidas)
 app.get('/productos', ensureAuthenticated, async (req, res) => {
   try {

@@ -61,11 +61,10 @@ body {
     font-size: 24px;
     font-weight: bold;
 }
-
-
-* Contenedor de la información del usuario */
+/* Contenedor del usuario */
 #user-container {
     position: relative; /* Necesario para posicionar el botón dentro de este contenedor */
+    height: 80px; /* Añadimos un poco de espacio para que el botón no se superponga con el dropdown */
   }
   
   /* Botón de usuario */
@@ -81,7 +80,7 @@ body {
       cursor: pointer;
       border: none;
       position: absolute; /* Lo posicionamos dentro del contenedor */
-      top: -45px; /* Colocamos el botón por encima */
+      top: 0; /* Colocamos el botón en la parte superior */
       right: 10px; /* Ajustamos al borde derecho */
       z-index: 2; /* Asegura que esté por encima del dropdown */
   }
@@ -91,7 +90,7 @@ body {
       display: none;
       position: absolute;
       right: 10px;
-      top: 50px; /* Ajusta el top para que quede debajo del botón */
+      top: 45px; /* Ajusta el top para que quede debajo del botón */
       background: white;
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -126,7 +125,6 @@ body {
   #logout-button:hover {
       background: #c9302c;
   }
-  
 /* Contenedor principal */
 .container {
     display: flex;

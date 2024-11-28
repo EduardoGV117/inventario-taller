@@ -23,21 +23,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!response.ok) throw new Error('Error al obtener información del usuario');
     const user = await response.json();
 
-    // Actualizar el botón del usuario
+    // Obtén los elementos del DOM
     const userButton = document.getElementById('user-button');
+    const dropdown = document.getElementById('user-dropdown');
+
+    // Verifica que los elementos existan
+    if (!userButton || !dropdown) {
+      console.error('Elementos necesarios no encontrados en el DOM.');
+      return;
+    }
+
+    // Configura la inicial del usuario
     const initial = user.name.charAt(0).toUpperCase();
     userButton.textContent = initial;
     userButton.style.backgroundColor = '#6A0DAD'; // Color morado
 
-    // Actualizar contenido desplegable
-    const dropdown = document.getElementById('user-dropdown');
+    // Configura el contenido desplegable
     dropdown.innerHTML = `
       <p><strong>${user.name}</strong></p>
       <p>${user.email}</p>
       <button id="logout-button">Cerrar sesión</button>
     `;
 
-    // Agregar funcionalidad al botón de cerrar sesión
+    // Muestra/oculta el dropdown al hacer clic en el botón
+    userButton.addEventListener('click', () => {
+      dropdown.classList.toggle('show');
+    });
+
+    // Configura el botón de cerrar sesión
     document.getElementById('logout-button').addEventListener('click', () => {
       window.location.href = '/logout';
     });
@@ -45,6 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Error al cargar los datos del usuario:', error);
   }
 });
+
 document.addEventListener('DOMContentLoaded', () => {
   const cargarProductos = async () => {
     try {

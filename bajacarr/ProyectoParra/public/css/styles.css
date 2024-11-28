@@ -54,7 +54,7 @@ body {
 }
 /* Logo */
 .logo {
-    height: 80px; /* Ajusta el tamaño del logo */
+    height: 60px; /* Ajusta el tamaño del logo */
     margin-right: 20px; /* Espacio entre el logo y el título */
     position: absolute;
     left: 20px; /* Alineación del logo en la parte izquierda */

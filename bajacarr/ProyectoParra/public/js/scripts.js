@@ -152,7 +152,7 @@ document.getElementById("deleteProductButton").addEventListener("click", async (
 document.addEventListener('DOMContentLoaded', () => {
   const cargarProductos = async () => {
     try {
-      const response = await fetch('/productos/insertar-producto'); // Ajusta la URL según tu endpoint
+      const response = await fetch('/productos'); // Ajusta la URL según tu endpoint
       if (!response.ok) throw new Error('Error al cargar productos');
       
       const productos = await response.json();
@@ -215,7 +215,7 @@ document.querySelector('#add-product-section form').addEventListener('submit', a
     descripcion: 'Descripción del producto',
   };
 
-  const response = await fetch('/productos', {
+  const response = await fetch('/productos/insertar-producto', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

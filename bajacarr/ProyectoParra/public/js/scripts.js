@@ -23,9 +23,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userInfo = await response.json();
     const userIcon = document.querySelector('.user-icon');
 
+    // Genera la inicial del nombre del usuario
+    const userInitial = userInfo.name.charAt(0).toUpperCase();
+
     // Actualiza la interfaz con los datos del usuario
     userIcon.innerHTML = `
-      <div class="user-initial">${userInfo.name.charAt(0).toUpperCase()}</div>
+      <div class="user-initial" title="${userInfo.name}">${userInitial}</div>
       <div class="dropdown">
         <ul>
           <li><strong>${userInfo.name}</strong></li>
@@ -34,6 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         </ul>
       </div>
     `;
+
+    // Añade comportamiento al hacer clic para mostrar/ocultar el menú
+    userIcon.addEventListener('click', () => {
+      const dropdown = userIcon.querySelector('.dropdown');
+      dropdown.classList.toggle('visible');
+    });
   } catch (error) {
     console.error('Error al cargar los datos del usuario:', error);
   }

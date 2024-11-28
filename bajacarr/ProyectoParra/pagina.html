@@ -105,30 +105,35 @@
             </section>
 
             <!-- Actualizar Stock -->
-            <!-- Actualizar Stock (oculto inicialmente) -->
-            <div id="searchStockContainer" class="hidden">
-                <input type="text" id="productSearch" placeholder="Buscar producto..." />
-                <button id="searchButton">Buscar</button>
-                
-                <table id="productTable">
-                    <thead>
-                        <tr>
-                            <th>Seleccionar</th>
-                            <th>Nombre Producto</th>
-                            <th>Categoría</th>
-                            <th>Precio Compra</th>
-                            <th>Precio Venta</th>
-                            <th>Stock Actual</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            <div id="updateFields" class="hidden">
-                <h3>Actualizar Stock</h3>
-                <input type="number" id="stockQuantity" placeholder="Cantidad a agregar" />
-                <button id="submitStockUpdate">Actualizar Stock</button>
-            </div>
+           <!-- Actualizar Stock (sección que se ocultará inicialmente) -->
+            <section id="updateStockForm" class="section hidden">
+                <h2>Actualizar Stock</h2>
+                <!-- Campo para buscar productos -->
+                <div id="searchStockContainer">
+                    <input type="text" id="productSearch" placeholder="Buscar producto..." />
+                    <button id="searchButton">Buscar</button>
+                    
+                    <table id="productTable">
+                        <thead>
+                            <tr>
+                                <th>Seleccionar</th>
+                                <th>Nombre Producto</th>
+                                <th>Categoría</th>
+                                <th>Precio Compra</th>
+                                <th>Precio Venta</th>
+                                <th>Stock Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- Campo para actualizar stock -->
+                <div id="updateFields">
+                    <h3>Actualizar Stock</h3>
+                    <input type="number" id="stockQuantity" placeholder="Cantidad a agregar" />
+                    <button id="submitStockUpdate">Actualizar Stock</button>
+                </div>
+            </section>
                         
             <!-- Ventas -->
             <section id="sales-section" class="section hidden">

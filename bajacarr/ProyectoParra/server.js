@@ -111,19 +111,27 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
 // Ruta para guardar el ID de usuario y correo en la base de datos
 app.post('/guardar-usuario', async (req, res) => {
   const { userId, email } = req.body;
+  const initial = email.charAt(0).toUpperCase();  // Tomamos la primera letra del correo para la inicial
+
   try {
       // Verificar si el usuario ya existe en la base de datos
-      const result = await client.query('SELECT * FROM Usuarios WHERE google_id = $1', [userId]);
+      const result = await client.query('SELECT * FROM usuarios WHERE google_id = $1', [userId]);
+
       if (result.rows.length === 0) {
           // Si no existe, lo agregamos
-          await client.query('INSERT INTO Usuarios (google_id, email) VALUES ($1, $2)', [userId, email]);
+          await client.query('INSERT INTO usuarios (google_id, email, inicial) VALUES ($1, $2, $3)', [userId, email, initial]);
+      } else {
+          // Si ya existe, podemos actualizar la información (por ejemplo, email o inicial)
+          await client.query('UPDATE usuarios SET email = $1, inicial = $2 WHERE google_id = $3', [email, initial, userId]);
       }
-      res.status(200).json({ message: 'Usuario guardado correctamente' });
+
+      res.status(200).json({ message: 'Usuario guardado o actualizado correctamente' });
   } catch (err) {
-      console.error('Error al guardar el usuario:', err);
-      res.status(500).send('Error al guardar el usuario');
+      console.error('Error al guardar o actualizar el usuario:', err);
+      res.status(500).send('Error al guardar o actualizar el usuario');
   }
 });
+
 
 
 // Iniciar servidor

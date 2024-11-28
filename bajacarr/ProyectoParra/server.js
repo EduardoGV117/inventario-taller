@@ -92,14 +92,14 @@ passport.use(
 // passport.serializeUser((user, done) => done(null, user));
 //passport.deserializeUser((user, done) => done(null, user));
 
-/*/ Middleware para proteger rutas
+// Middleware para proteger rutas
 const ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
   res.redirect('/auth/google');
 }; 
-
+/*
 // Ruta para iniciar sesión con Google
 app.get(
   '/auth/google',
@@ -122,10 +122,6 @@ app.get('/unauthorized', (req, res) => {
   res.status(403).send('Acceso denegado: tu correo no está autorizado.');
 });
 
-// Ruta principal protegida
-app.get('/', ensureAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'pagina.html'));
-});
 
 // Otras APIs (protegidas)
 app.get('/productos', ensureAuthenticated, async (req, res) => {

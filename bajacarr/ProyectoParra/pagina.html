@@ -15,14 +15,13 @@
             <button class="control close"></button>
         </div>
         <h1 class="title">BAJACAR</h1>
-        <div class="user-icon">
-            <span class="user-initial">B</span>
-            <div class="dropdown">
-                <ul>
-                    <li><a href="#">Ver Perfil</a></li>
-                    <li><a href="#">Cerrar Sesión</a></li>
-                </ul>
-            </div>
+        <div class="user-initial" title="${userInfo.name}">${userInitial}</div>
+        <div class="dropdown">
+          <ul>
+            <li><strong>${userInfo.name}</strong></li>
+            <li>${userInfo.email}</li>
+            <li><a href="/logout">Cerrar sesión</a></li>
+          </ul>
         </div>
     </header>
 

@@ -52,58 +52,75 @@ body {
     font-size: 24px;
     font-weight: bold;
 }
+/* Logo */
+.logo {
+    height: 40px; /* Ajusta el tamaño del logo */
+    margin-right: 20px; /* Espacio entre el logo y el título */
+    position: absolute;
+    left: 20px; /* Alineación del logo en la parte izquierda */
+    top: 10px;  /* Un poco de espacio desde la parte superior */
+}
+
 /* Header */
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Asegura que el contenido esté centrado verticalmente */
+    align-items: center;
     padding: 10px 20px;
     background-color: var(--secondary-color);
     border-bottom: 2px solid var(--highlight-color);
     position: relative;
-    height: 50px; /* Ajustamos la altura de la barra */
+    height: 50px; /* Mantén la altura de la barra de navegación */
 }
 
-/* Contenedor del usuario (Asegura que el botón esté dentro de la barra) */
+/* Título */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 80px; /* Espacio para que el título no se sobreponga con el logo */
+    color: white;
+}
+
+/* Ajuste para el contenedor de usuario */
 #user-container {
-    position: absolute; /* Lo sacamos de flujo normal para que no afecte la altura del contenedor */
+    position: absolute;
     right: 10px;
-    top: 10px; /* Ajustamos la posición dentro de la barra */
+    top: 10px;
 }
 
 /* Botón de usuario */
 .user-button {
-    width: 50px; /* Aumentamos un poquito el tamaño */
-    height: 50px; /* Mantenemos el aspecto redondeado */
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background-color: #6A0DAD; /* Color morado */
+    background-color: #6A0DAD;
     color: white;
-    font-size: 22px; /* Aumentamos el tamaño de la letra */
+    font-size: 22px;
     text-align: center;
-    line-height: 50px; /* Asegura que el texto esté centrado */
+    line-height: 50px;
     cursor: pointer;
     border: none;
-    z-index: 2; /* Asegura que esté por encima del dropdown */
+    z-index: 2;
 }
 
-/* Dropdown oculto */
+/* Dropdown de usuario */
 .user-dropdown {
     display: none;
     position: absolute;
     right: 10px;
-    top: 55px; /* Ajustamos para que se vea debajo del botón */
+    top: 55px;
     background: white;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 10px;
-    z-index: 1; /* Asegura que esté por debajo del botón */
+    z-index: 1;
 }
 
-/* Dropdown visible */
 .user-dropdown.show {
     display: block;
 }
+
 
 /* Estilo de la información */
 .user-dropdown p {

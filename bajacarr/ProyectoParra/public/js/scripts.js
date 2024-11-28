@@ -15,6 +15,8 @@ navBtns.forEach(btn => {
     targetSection.classList.add('active-section');
   });
 });
+
+
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     // Fetch para obtener información del usuario
@@ -32,11 +34,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('user-name').textContent = userInfo.name;
     document.getElementById('user-email').textContent = userInfo.email;
 
-    // Muestra/oculta el menú desplegable al hacer clic
+    // Alternar visibilidad del menú desplegable
     const userIcon = document.querySelector('.user-icon');
+    const dropdown = userIcon.querySelector('.dropdown');
+
     userIcon.addEventListener('click', () => {
-      const dropdown = userIcon.querySelector('.dropdown');
-      dropdown.classList.toggle('visible');
+      const isVisible = dropdown.style.display === 'block';
+      dropdown.style.display = isVisible ? 'none' : 'block'; // Alternar entre visible y oculto
     });
   } catch (error) {
     console.error('Error al cargar los datos del usuario:', error);

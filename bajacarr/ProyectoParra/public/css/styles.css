@@ -71,17 +71,17 @@ body {
   }
   
   .user-initial {
-    background-color: var(--highlight-color);
+    background-color: #6a0dad; /* Morado */
+    color: white; /* Texto blanco para contraste */
+    font-size: 24px; /* Tamaño más grande */
+    font-weight: bold; /* Texto en negritas */
     border-radius: 50%;
-    width: 50px;
+    width: 50px; /* Asegúrate de que el tamaño sea suficiente */
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px; /* Tamaño más grande */
-    font-weight: bold;
-    color: var(--text-color);
-    transition: transform 0.2s ease;
+    cursor: pointer;
   }
   
   .user-initial:hover {
@@ -89,43 +89,35 @@ body {
   }
   
   .dropdown {
-    display: none;
     position: absolute;
-    top: 60px; /* Ajusta según el tamaño de la inicial */
-    right: 0;
-    background-color: var(--secondary-color);
-    border: 1px solid var(--highlight-color);
+    top: 60px; /* Ajusta según el tamaño del header */
+    right: 10px; /* Separación desde el borde derecho */
+    background-color: #272727; /* Fondo oscuro */
+    border: 1px solid #6a0dad; /* Borde morado */
     border-radius: 8px;
-    z-index: 10;
-    width: 200px; /* Ancho fijo */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: none; /* Oculto por defecto */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombras */
   }
-  
   
   .dropdown ul {
     list-style: none;
     margin: 0;
-    padding: 10px;
+    padding: 0;
   }
   
   .dropdown li {
-    padding: 8px 10px;
-    color: var(--text-color);
-    font-size: 14px;
-    border-bottom: 1px solid var(--highlight-color);
+    margin: 5px 0;
   }
   
-  .dropdown li:last-child {
-    border-bottom: none;
-  }
-  
-  .dropdown a {
-    color: var(--highlight-color);
+  .dropdown li a {
     text-decoration: none;
+    color: white;
+    font-weight: bold;
   }
   
-  .dropdown a:hover {
-    text-decoration: underline;
+  .dropdown li a:hover {
+    color: #6a0dad; /* Color morado al pasar el cursor */
   }
 
 /* Contenedor principal */

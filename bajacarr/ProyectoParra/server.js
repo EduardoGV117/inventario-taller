@@ -163,10 +163,14 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
 // Ruta para buscar productos
 app.get('/productos/buscar', async (req, res) => {
   const { nombre_producto } = req.query;
-  const result = await pool.query('SELECT * FROM Productos WHERE nombre_producto ILIKE $1', [`%${nombre_producto}%`]);
-  res.json(result.rows);
+  try {
+    const result = await client.query('SELECT * FROM Productos WHERE nombre_producto ILIKE $1', [`%${nombre_producto}%`]);
+    res.json(result.rows); // Devuelve los productos encontrados como JSON
+  } catch (error) {
+    console.error('Error al buscar productos:', error);
+    res.status(500).json({ error: 'Error al buscar productos' });
+  }
 });
-
 // Ruta para actualizar el stock de un producto
 app.post('/productos/actualizar-stock', async (req, res) => {
   const { id_producto, cantidad } = req.body;

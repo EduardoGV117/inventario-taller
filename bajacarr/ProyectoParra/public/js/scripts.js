@@ -13,6 +13,15 @@ navBtns.forEach(btn => {
 
     // Add the active class to the target section
     targetSection.classList.add('active-section');
+
+    // Mostrar u ocultar campos de "Actualizar Stock" cuando se navega a "Actualizar Stock"
+    if (targetSectionId === 'updateStockForm') {
+        document.getElementById('searchStockContainer').classList.remove('hidden');
+        document.getElementById('updateFields').classList.remove('hidden');
+    } else {
+        document.getElementById('searchStockContainer').classList.add('hidden');
+        document.getElementById('updateFields').classList.add('hidden');
+    }
   });
 });
 

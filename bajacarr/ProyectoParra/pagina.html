@@ -105,7 +105,8 @@
             </section>
 
             <!-- Actualizar Stock -->
-            <div id="searchStockContainer">
+            <!-- Actualizar Stock (oculto inicialmente) -->
+            <div id="searchStockContainer" class="hidden">
                 <input type="text" id="productSearch" placeholder="Buscar producto..." />
                 <button id="searchButton">Buscar</button>
                 
@@ -123,7 +124,7 @@
                     <tbody></tbody>
                 </table>
             </div>
-            <div id="updateFields" style="display:none;">
+            <div id="updateFields" class="hidden">
                 <h3>Actualizar Stock</h3>
                 <input type="number" id="stockQuantity" placeholder="Cantidad a agregar" />
                 <button id="submitStockUpdate">Actualizar Stock</button>

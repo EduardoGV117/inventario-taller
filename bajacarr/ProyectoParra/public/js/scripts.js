@@ -17,16 +17,23 @@ navBtns.forEach(btn => {
 });
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    // Fetch para obtener información del usuario
     const response = await fetch('/user-info');
     if (!response.ok) throw new Error('Error al obtener información del usuario');
-    
+
     const userInfo = await response.json();
-    const userIcon = document.querySelector('.user-icon');
 
-    // Genera la inicial del nombre del usuario
+    // Actualiza la inicial del usuario
     const userInitial = userInfo.name.charAt(0).toUpperCase();
+    const userInitialElement = document.querySelector('.user-initial');
+    userInitialElement.textContent = userInitial;
 
-    // Añade comportamiento al hacer clic para mostrar/ocultar el menú
+    // Actualiza el nombre y correo en el menú desplegable
+    document.getElementById('user-name').textContent = userInfo.name;
+    document.getElementById('user-email').textContent = userInfo.email;
+
+    // Muestra/oculta el menú desplegable al hacer clic
+    const userIcon = document.querySelector('.user-icon');
     userIcon.addEventListener('click', () => {
       const dropdown = userIcon.querySelector('.dropdown');
       dropdown.classList.toggle('visible');

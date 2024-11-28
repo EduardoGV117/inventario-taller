@@ -84,6 +84,32 @@
                     <!-- Aquí se llenarán las filas dinámicamente -->
                   </tbody>
                 </table>
+                <h2>Actualizar Stock</h2>
+                <!-- Campo para buscar productos -->
+                <div id="searchStockContainer">
+                    <input type="text" id="productSearch" placeholder="Buscar producto..." />
+                    <button id="searchButton">Buscar</button>
+                    
+                    <table id="productTable">
+                        <thead>
+                            <tr>
+                                <th>Seleccionar</th>
+                                <th>Nombre Producto</th>
+                                <th>Categoría</th>
+                                <th>Precio Compra</th>
+                                <th>Precio Venta</th>
+                                <th>Stock Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- Campo para actualizar stock -->
+                <div id="updateFields">
+                    <h3>Actualizar Stock</h3>
+                    <input type="number" id="stockQuantity" placeholder="Cantidad a agregar" />
+                    <button id="submitStockUpdate">Actualizar Stock</button>
+                </div>
               </section>
 
             <!-- Agregar Producto -->

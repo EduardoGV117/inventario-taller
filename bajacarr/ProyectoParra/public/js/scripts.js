@@ -77,34 +77,37 @@ async function searchProducts(searchTerm) {
 function renderProductList(products) {
   const productListDiv = document.getElementById("productList");
   productListDiv.innerHTML = ''; // Limpiar lista anterior
+
   products.forEach(product => {
       const div = document.createElement("div");
       div.innerHTML = `
-          <input type="checkbox" class="productCheckbox" data-id="${product.id_producto}" />
+          <input type="radio" name="product" class="productCheckbox" data-id="${product.id_producto}" />
           <label>${product.nombre_producto} - ${product.categoria} - ${product.precio_venta}</label>
       `;
       productListDiv.appendChild(div);
   });
+
+  // Añadir evento para cuando se seleccione un producto
+  const checkboxes = document.querySelectorAll('.productCheckbox');
+  checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', (event) => {
+          const selectedCheckbox = event.target;
+          if (selectedCheckbox.checked) {
+              const productId = selectedCheckbox.getAttribute("data-id");
+              showUpdateFields(productId);
+          }
+      });
+  });
 }
 
-// Muestra el formulario de actualización de stock cuando un producto es seleccionado
-document.getElementById("productList").addEventListener("change", (event) => {
-  const selectedCheckbox = event.target;
-  if (selectedCheckbox.checked) {
-      const productId = selectedCheckbox.getAttribute("data-id");
-      showUpdateForm(productId);
-  }
-});
-
-// Muestra el formulario para actualizar el stock
-function showUpdateForm(productId) {
-  document.getElementById("updateStockForm").style.display = "block";
-  document.getElementById("updateStockFormFields").setAttribute("data-product-id", productId);
+// Muestra los campos para actualizar el stock cuando un producto es seleccionado
+function showUpdateFields(productId) {
+  document.getElementById("updateFields").style.display = "block";
+  document.getElementById("submitStockUpdate").setAttribute("data-product-id", productId);
 }
 
 // Maneja la actualización del stock
-document.getElementById("updateStockFormFields").addEventListener("submit", async (event) => {
-  event.preventDefault();
+document.getElementById("submitStockUpdate").addEventListener("click", async (event) => {
   const productId = event.target.getAttribute("data-product-id");
   const stockQuantity = document.getElementById("stockQuantity").value;
 
@@ -129,7 +132,7 @@ document.getElementById("updateStockFormFields").addEventListener("submit", asyn
 
 // Maneja la eliminación de productos
 document.getElementById("deleteProductButton").addEventListener("click", async () => {
-  const productId = document.getElementById("updateStockFormFields").getAttribute("data-product-id");
+  const productId = document.getElementById("submitStockUpdate").getAttribute("data-product-id");
 
   const response = await fetch(`/productos/eliminar`, {
       method: 'DELETE',

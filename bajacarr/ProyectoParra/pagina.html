@@ -39,7 +39,7 @@
                 <li><button data-target="home-section" class="nav-btn">Home</button></li>
                 <li><button data-target="add-product-section" class="nav-btn">Agregar Producto</button></li>
                 <li><button data-target="inventory-section" class="nav-btn">Inventario</button></li> 
-                <li><button data-target="update-stock-section" class="nav-btn">Actualizar Stock</button></li>
+                <li><button data-target="search-container" class="nav-btn">Actualizar Stock</button></li>
                 <li><button data-target="sales-section" class="nav-btn">Ventas</button></li>
                 <li><button data-target="losses-section" class="nav-btn">Pérdidas</button></li>
                 <li><button data-target="reports-section" class="nav-btn">Reportes</button></li>
@@ -105,19 +105,26 @@
             </section>
 
             <!-- Actualizar Stock -->
-            <section id="update-stock-section" class="section hidden">
-                <h2>Actualizar Stock</h2>
-                <form id="update-product-form">
-                    <input type="text" name="nombre" placeholder="Nombre del producto" />
-                    <textarea name="descripcion" placeholder="Descripción del producto"></textarea>
-                    <input type="number" name="precio_compra" placeholder="Precio de compra" />
-                    <input type="number" name="precio_venta" placeholder="Precio de venta" />
-                    <input type="number" name="stock" placeholder="Stock" />
-                    <textarea name="notas" placeholder="Notas adicionales o detalles de la actualización"></textarea>
-                    <button type="submit">Actualizar Producto</button>
-                </form>
-            </section>
+            <!-- Formulario de búsqueda y listado de productos -->
+            <div class="search-container">
+                <input type="text" id="productSearch" placeholder="Buscar producto..." />
+                <button id="searchButton">Buscar</button>
+            </div>
 
+            <!-- Lista de productos con checkboxes -->
+            <div id="productList"></div>
+
+            <!-- Formulario para actualizar stock -->
+            <div id="updateStockForm" style="display: none;">
+                <h3>Actualizar Stock</h3>
+                <form id="updateStockFormFields">
+                    <label for="stockQuantity">Cantidad a agregar:</label>
+                    <input type="number" id="stockQuantity" min="1" />
+                    <br />
+                    <button type="submit">Actualizar Stock</button>
+                    <button type="button" id="deleteProductButton">Eliminar Producto</button>
+                </form>
+            </div>
             <!-- Ventas -->
             <section id="sales-section" class="section hidden">
                 <h2>Ventas</h2>

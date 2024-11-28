@@ -160,6 +160,36 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Ruta para buscar productos
+app.get('/productos/buscar', async (req, res) => {
+  const { nombre_producto } = req.query;
+  const result = await pool.query('SELECT * FROM Productos WHERE nombre_producto ILIKE $1', [`%${nombre_producto}%`]);
+  res.json(result.rows);
+});
+
+// Ruta para actualizar el stock de un producto
+app.post('/productos/actualizar-stock', async (req, res) => {
+  const { id_producto, cantidad } = req.body;
+  try {
+      await pool.query('UPDATE Productos SET stock_actual = stock_actual + $1 WHERE id_producto = $2', [cantidad, id_producto]);
+      res.json({ success: true });
+  } catch (error) {
+      res.json({ success: false, error: error.message });
+  }
+});
+
+// Ruta para eliminar un producto
+app.delete('/productos/eliminar', async (req, res) => {
+  const { id_producto } = req.body;
+  try {
+      await pool.query('DELETE FROM Productos WHERE id_producto = $1', [id_producto]);
+      res.json({ success: true });
+  } catch (error) {
+      res.json({ success: false, error: error.message });
+  }
+});
+
+
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {

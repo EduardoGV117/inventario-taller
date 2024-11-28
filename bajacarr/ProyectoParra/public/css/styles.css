@@ -23,10 +23,7 @@ body {
 
 
 
-.window-controls {
-    display: flex;
-    gap: 5px;
-}
+
 
 .control {
     width: 12px;
@@ -36,17 +33,7 @@ body {
     cursor: pointer;
 }
 
-.minimize {
-    background-color: yellow;
-}
 
-.maximize {
-    background-color: green;
-}
-
-.close {
-    background-color: red;
-}
 
 .title {
     font-size: 24px;
@@ -61,7 +48,19 @@ body {
     background-color: var(--secondary-color);
     border-bottom: 2px solid var(--highlight-color);
     position: relative;
-    height: 50px; /* Ajustamos la altura de la barra */
+    height: 50px; /* Mantener la altura de la barra */
+}
+
+/* Logo (Imagen) */
+.logo {
+    width: auto;
+    height: 30px; /* Ajusta el tamaño de la imagen para que se acomode */
+    margin-right: 10px; /* Espacio entre el logo y el título */
+}
+
+/* Eliminar los controles de ventana (puntos) */
+.window-controls {
+    display: none; /* Esto quita los puntitos de control */
 }
 
 /* Contenedor del usuario (Asegura que el botón esté dentro de la barra) */

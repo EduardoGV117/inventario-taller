@@ -26,18 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Genera la inicial del nombre del usuario
     const userInitial = userInfo.name.charAt(0).toUpperCase();
 
-    // Actualiza la interfaz con los datos del usuario
-    userIcon.innerHTML = `
-      <div class="user-initial" title="${userInfo.name}">${userInitial}</div>
-      <div class="dropdown">
-        <ul>
-          <li><strong>${userInfo.name}</strong></li>
-          <li>${userInfo.email}</li>
-          <li><a href="/logout">Cerrar sesión</a></li>
-        </ul>
-      </div>
-    `;
-
     // Añade comportamiento al hacer clic para mostrar/ocultar el menú
     userIcon.addEventListener('click', () => {
       const dropdown = userIcon.querySelector('.dropdown');

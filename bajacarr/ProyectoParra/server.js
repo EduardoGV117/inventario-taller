@@ -89,8 +89,8 @@ passport.use(
 );
 
 // Serialización y deserialización de usuario
-// passport.serializeUser((user, done) => done(null, user));
-//passport.deserializeUser((user, done) => done(null, user));
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
 
 // Middleware para proteger rutas
 const ensureAuthenticated = (req, res, next) => {

@@ -19,34 +19,32 @@ navBtns.forEach(btn => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // Fetch para obtener información del usuario
     const response = await fetch('/user-info');
     if (!response.ok) throw new Error('Error al obtener información del usuario');
+    const user = await response.json();
 
-    const userInfo = await response.json();
+    // Actualizar el botón del usuario
+    const userButton = document.getElementById('user-button');
+    const initial = user.name.charAt(0).toUpperCase();
+    userButton.textContent = initial;
+    userButton.style.backgroundColor = '#6A0DAD'; // Color morado
 
-    // Actualiza la inicial del usuario
-    const userInitial = userInfo.name.charAt(0).toUpperCase();
-    const userInitialElement = document.querySelector('.user-initial');
-    userInitialElement.textContent = userInitial;
+    // Actualizar contenido desplegable
+    const dropdown = document.getElementById('user-dropdown');
+    dropdown.innerHTML = `
+      <p><strong>${user.name}</strong></p>
+      <p>${user.email}</p>
+      <button id="logout-button">Cerrar sesión</button>
+    `;
 
-    // Actualiza el nombre y correo en el menú desplegable
-    document.getElementById('user-name').textContent = userInfo.name;
-    document.getElementById('user-email').textContent = userInfo.email;
-
-    // Alternar visibilidad del menú desplegable
-    const userIcon = document.querySelector('.user-icon');
-    const dropdown = userIcon.querySelector('.dropdown');
-
-    userIcon.addEventListener('click', () => {
-      const isVisible = dropdown.style.display === 'block';
-      dropdown.style.display = isVisible ? 'none' : 'block'; // Alternar entre visible y oculto
+    // Agregar funcionalidad al botón de cerrar sesión
+    document.getElementById('logout-button').addEventListener('click', () => {
+      window.location.href = '/logout';
     });
   } catch (error) {
     console.error('Error al cargar los datos del usuario:', error);
   }
 });
-
 document.addEventListener('DOMContentLoaded', () => {
   const cargarProductos = async () => {
     try {

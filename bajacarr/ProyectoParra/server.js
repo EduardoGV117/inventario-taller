@@ -117,20 +117,38 @@ app.get('/unauthorized', (req, res) => {
 app.get('/', ensureAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'pagina.html'));
 });
-// Ruta para obtener información del usuario autenticado
-app.get('/user-info', ensureAuthenticated, (req, res) => {
+app.get('/user-info', ensureAuthenticated, async (req, res) => {
   try {
-    const { id_usuario: id, email, nombre } = req.user; // Asumiendo que estos campos están en `req.user`
-    res.json({
-      id,
-      email,
-      name: nombre, // Enviar el nombre completo
-    });
+    const userId = req.user.id; // Usamos el ID de Google proporcionado por Passport
+    const query = 'SELECT id_usuario, email, nombre FROM usuarios WHERE id_usuario = $1';
+    const result = await client.query(query, [userId]);
+
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      res.json({
+        id: user.id_usuario,
+        email: user.email,
+        name: user.nombre,
+      });
+    } else {
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
   } catch (error) {
     console.error('Error al obtener información del usuario:', error);
     res.status(500).json({ error: 'Error al obtener información del usuario' });
   }
 });
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error('Error al cerrar sesión:', err);
+      return res.status(500).send('Error al cerrar sesión');
+    }
+    res.redirect('/auth/google'); // Redirige al inicio de sesión
+  });
+});
+
 // Otras APIs (protegidas)
 app.get('/productos', ensureAuthenticated, async (req, res) => {
   try {

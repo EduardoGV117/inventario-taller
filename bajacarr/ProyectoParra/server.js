@@ -41,6 +41,35 @@ app.use(passport.session());
 
 //AQUI VAN CAMBIOS.
 // Configurar Google OAuth 2.0
+// Configuración de Google OAuth 2.0
+passport.use(new GoogleStrategy({
+  clientID: '757116200337-9n45nj3gdjvkiappi401g9pphsr6j975.apps.googleusercontent.com',
+  clientSecret: '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',
+  callbackURL: 'https://bajacar.net/auth/callback', 
+}, async (token, tokenSecret, profile, done) => {
+  // Aquí estamos guardando los datos en la sesión
+  const user = {
+      google_id: profile.id,
+      email: profile.emails[0].value,
+      inicial: profile.name.givenName.charAt(0).toUpperCase(),
+  };
+  // Guardar en la sesión
+  req.session.user = user;
+
+  return done(null, user);
+}));
+
+// Ruta de autenticación con Google
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Ruta de callback después de la autenticación
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+      // Aquí el usuario ya está autenticado
+      res.redirect('/');
+  });
+
 passport.use(
   new GoogleStrategy(
     {
@@ -60,16 +89,16 @@ passport.use(
 );
 
 // Serialización y deserialización de usuario
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+// passport.serializeUser((user, done) => done(null, user));
+//passport.deserializeUser((user, done) => done(null, user));
 
-// Middleware para proteger rutas
+/*/ Middleware para proteger rutas
 const ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
   res.redirect('/auth/google');
-};
+}; 
 
 // Ruta para iniciar sesión con Google
 app.get(
@@ -87,7 +116,7 @@ app.get(
     res.redirect('/'); // Redirige al inicio después de autenticarse
   }
 );
-
+*/
 // Página de error para usuarios no autorizados
 app.get('/unauthorized', (req, res) => {
   res.status(403).send('Acceso denegado: tu correo no está autorizado.');
@@ -130,6 +159,16 @@ app.post('/guardar-usuario', async (req, res) => {
       console.error('Error al guardar o actualizar el usuario:', err);
       res.status(500).send('Error al guardar o actualizar el usuario');
   }
+});
+// Ruta para cerrar sesión
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+      if (err) return res.send("Error al cerrar sesión.");
+      req.session.destroy((err) => {
+          if (err) return res.send("Error al destruir sesión.");
+          res.redirect('/');
+      });
+  });
 });
 
 

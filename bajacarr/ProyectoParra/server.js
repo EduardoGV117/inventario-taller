@@ -117,7 +117,20 @@ app.get('/unauthorized', (req, res) => {
 app.get('/', ensureAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'pagina.html'));
 });
-
+// Ruta para obtener información del usuario autenticado
+app.get('/user-info', ensureAuthenticated, (req, res) => {
+  try {
+    const { id_usuario: id, email, nombre } = req.user; // Asumiendo que estos campos están en `req.user`
+    res.json({
+      id,
+      email,
+      name: nombre, // Enviar el nombre completo
+    });
+  } catch (error) {
+    console.error('Error al obtener información del usuario:', error);
+    res.status(500).json({ error: 'Error al obtener información del usuario' });
+  }
+});
 // Otras APIs (protegidas)
 app.get('/productos', ensureAuthenticated, async (req, res) => {
   try {

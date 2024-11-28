@@ -90,11 +90,11 @@ body {
       display: none;
       position: absolute;
       right: 10px;
-      top: 45px; /* Ajusta el top para que quede debajo del botón */
+      top: 35px; /* Ajusta el top para que quede debajo del botón */
       background: white;
       border: 1px solid #ddd;
       border-radius: 5px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
       padding: 10px;
       z-index: 1; /* Asegura que esté por debajo del botón */
   }

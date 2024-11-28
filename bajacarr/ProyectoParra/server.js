@@ -46,14 +46,34 @@ passport.use(
     {
       clientID: '757116200337-9n45nj3gdjvkiappi401g9pphsr6j975.apps.googleusercontent.com',
       clientSecret: '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',
-      callbackURL: 'https://bajacar.net/auth/callback', // Ruta de redirección
+      callbackURL: 'https://bajacar.net/auth/callback',
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       const email = profile.emails[0].value;
+      const userId = profile.id;
+      const name = profile.displayName || 'Usuario';
+
       if (allowedEmails.includes(email)) {
-        return done(null, profile); // Usuario autorizado
+        // Verifica si el usuario ya existe en la base de datos (opcional)
+        try {
+          const userQuery = 'SELECT * FROM usuarios WHERE id_usuario = $1';
+          const userResult = await client.query(userQuery, [userId]);
+
+          if (userResult.rows.length === 0) {
+            // Si no existe, inserta un nuevo usuario
+            const insertQuery = `
+              INSERT INTO usuarios (id_usuario, email, nombre)
+              VALUES ($1, $2, $3)
+            `;
+            await client.query(insertQuery, [userId, email, name]);
+          }
+        } catch (err) {
+          console.error('Error al gestionar usuario en la base de datos:', err);
+        }
+
+        return done(null, { id: userId, email, name }); // Devuelve datos relevantes
       } else {
-        return done(null, false, { message: 'Correo no autorizado' }); // Usuario no autorizado
+        return done(null, false, { message: 'Correo no autorizado' });
       }
     }
   )

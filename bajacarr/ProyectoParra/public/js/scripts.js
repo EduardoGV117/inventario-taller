@@ -15,7 +15,29 @@ navBtns.forEach(btn => {
     targetSection.classList.add('active-section');
   });
 });
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch('/user-info');
+    if (!response.ok) throw new Error('Error al obtener información del usuario');
+    
+    const userInfo = await response.json();
+    const userIcon = document.querySelector('.user-icon');
 
+    // Actualiza la interfaz con los datos del usuario
+    userIcon.innerHTML = `
+      <div class="user-initial">${userInfo.name.charAt(0).toUpperCase()}</div>
+      <div class="dropdown">
+        <ul>
+          <li><strong>${userInfo.name}</strong></li>
+          <li>${userInfo.email}</li>
+          <li><a href="/logout">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    `;
+  } catch (error) {
+    console.error('Error al cargar los datos del usuario:', error);
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const cargarProductos = async () => {

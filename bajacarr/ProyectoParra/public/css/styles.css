@@ -64,17 +64,21 @@ body {
 
 .user-icon {
     position: relative;
-}
-
-.user-initial {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  
+  .user-initial {
     background-color: var(--highlight-color);
     border-radius: 50%;
-    padding: 5px 10px;
+    padding: 10px;
     font-size: 18px;
-    cursor: pointer;
-}
-
-.dropdown {
+    color: var(--text-color);
+  }
+  
+  .dropdown {
     display: none;
     position: absolute;
     top: 40px;
@@ -82,16 +86,23 @@ body {
     background-color: var(--secondary-color);
     border: 1px solid var(--highlight-color);
     border-radius: 5px;
-}
-
-.user-icon:hover .dropdown {
+    z-index: 10;
+  }
+  
+  .user-icon:hover .dropdown {
     display: block;
-}
-
-.dropdown ul {
+  }
+  
+  .dropdown ul {
     list-style: none;
-}
-
+    padding: 0;
+  }
+  
+  .dropdown li {
+    padding: 10px;
+    text-align: left;
+    color: var(--text-color);
+  }
 .dropdown li a {
     text-decoration: none;
     color: var(--text-color);

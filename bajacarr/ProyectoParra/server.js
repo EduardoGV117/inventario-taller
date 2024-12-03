@@ -208,6 +208,41 @@ app.delete('/productos/eliminar', async (req, res) => {
   }
 });
 
+app.post('/api/ventas', ensureAuthenticated, async (req, res) => {
+  const { invoiceNumber, products } = req.body;
+
+  // Crear la factura
+  const userId = req.user.id_usuario;
+  const queryFactura = `INSERT INTO facturas (id_usuario) VALUES ($1) RETURNING id_factura`;
+  try {
+      const result = await db.query(queryFactura, [userId]);
+      const facturaId = result.rows[0].id_factura;
+
+      // Insertar los productos en el detalle de la factura
+      const queryDetalle = `
+          INSERT INTO detalle_factura (id_factura, id_producto, cantidad)
+          VALUES ($1, $2, $3)
+      `;
+      for (const product of products) {
+          await db.query(queryDetalle, [facturaId, product.productId, product.quantity]);
+
+          // Restar stock del inventario
+          const queryStock = `
+              UPDATE productos
+              SET stock_actual = stock_actual - $1
+              WHERE id_producto = $2
+          `;
+          await db.query(queryStock, [product.quantity, product.productId]);
+      }
+
+      res.status(200).send("Venta registrada correctamente.");
+  } catch (error) {
+      console.error("Error al registrar la venta", error);
+      res.status(500).send("Error al registrar la venta.");
+  }
+});
+
+
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor escuchando en http://0.0.0.0:${port}`);

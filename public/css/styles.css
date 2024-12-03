@@ -1,0 +1,291 @@
+/* Colores */
+:root {
+    --bg-color: #222;
+    --text-color: #c9c7c7;
+    --secondary-color: #272727;
+    --highlight-color: #242323;
+    --highlight-hover: #4CAF50; /* Verde para hover */
+}
+
+/* Reset de márgenes y padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo general del body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+
+
+.window-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+.minimize {
+    background-color: yellow;
+}
+
+.maximize {
+    background-color: green;
+}
+
+.close {
+    background-color: red;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+/* Logo */
+.logo {
+    height: 60px; /* Ajusta el tamaño del logo */
+    margin-right: 20px; /* Espacio entre el logo y el título */
+    position: absolute;
+    left: 20px; /* Alineación del logo en la parte izquierda */
+    top: 10px;  /* Un poco de espacio desde la parte superior */
+}
+/* Estilo para el logo grande en Home */
+#home-section .logo-large {
+    width: 100%; /* Para que el logo ocupe todo el ancho del contenedor */
+    max-width: 400px; /* Limitar el tamaño máximo del logo */
+    margin: 20px auto; /* Centrado y espaciado alrededor */
+    display: block;
+}
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    border-bottom: 2px solid var(--highlight-color);
+    position: relative;
+    height: 50px; /* Mantén la altura de la barra de navegación */
+}
+
+/* Título */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 80px; /* Espacio para que el título no se sobreponga con el logo */
+    color: white;
+}
+
+/* Ajuste para el contenedor de usuario */
+#user-container {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+/* Botón de usuario */
+.user-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #6A0DAD;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    border: none;
+    z-index: 2;
+}
+
+/* Dropdown de usuario */
+.user-dropdown {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 55px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1;
+}
+
+.user-dropdown.show {
+    display: block;
+}
+
+
+/* Estilo de la información */
+.user-dropdown p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Estilo del botón de cerrar sesión */
+#logout-button {
+    display: block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#logout-button:hover {
+    background: #c9302c;
+}
+
+/* Estilo de la tabla de productos */
+#products-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  #products-table th, #products-table td {
+    padding: 10px;
+    border: 1px solid var(--highlight-color);
+    text-align: center;
+    color: var(--text-color);
+  }
+  
+  #products-table th {
+    background-color: var(--highlight-color);
+  }
+  
+  #products-table tbody tr:hover {
+    background-color: var(--highlight-hover);
+    color: var(--bg-color);
+  }
+  
+  /* Botones de acciones */
+  #stock-actions button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: var(--highlight-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #stock-actions button:hover {
+    background-color: var(--highlight-hover);
+    color: var(--bg-color);
+  }
+
+
+
+
+
+/* Contenedor principal */
+.container {
+    display: flex;
+    height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: var(--secondary-color);
+    width: 250px;
+    padding: 20px;
+}
+
+.navbar {
+    list-style: none;
+}
+
+.nav-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    text-align: left;
+    background-color: var(--highlight-color);
+    border: none;
+    color: var(--text-color);
+    border-radius: 5px;
+    font-size: 18px; /* Aumentado tamaño de fuente */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: var(--highlight-hover); /* Cambio a verde */
+    color: var(--bg-color);
+}
+
+/* Contenido principal */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-left: 2px solid var(--highlight-color);
+    height: 100%;  /* Asegura que se ajuste al contenedor */
+    overflow-y: auto; /* Agrega desplazamiento si el contenido es grande */
+}
+
+.section {
+    display: none; /* Inicialmente oculto */
+    margin-bottom: 20px;
+    background-color: var(--highlight-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.active-section {
+    display: block; /* Mostrar solo la sección activa */
+}
+
+/* Mejorando formularios */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+form input {
+    padding: 15px;  /* Aumentado padding */
+    margin-bottom: 15px;
+    border: 1px solid var(--highlight-color);
+    border-radius: 5px;
+    background-color: #fff;
+    color: #070707;
+    font-size: 18px; /* Aumentado tamaño de fuente */
+}
+
+form button {
+    padding: 12px;
+    background-color: var(--highlight-color);
+    border: none;
+    color: var(--text-color);
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}

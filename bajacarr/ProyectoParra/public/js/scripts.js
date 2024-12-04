@@ -409,14 +409,16 @@ const mostrarProductosEnTablas = (insertados, actualizados) => {
 };
 document.getElementById('generate-pdf').addEventListener('click', async () => {
   const mesSeleccionado = document.getElementById('report-month').value;
-  const { insertados, actualizados } = await cargarProductosPorMes(mesSeleccionado); // Obtener productos
+  const { insertados, actualizados } = await cargarProductosPorMes(mesSeleccionado); // Obtener productos filtrados
 
-  // Crear el documento PDF
+  console.log('Insertados:', insertados); // Verifica los productos insertados
+  console.log('Actualizados:', actualizados); // Verifica los productos actualizados
+
+  // Crear PDF
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let yOffset = 20;
 
-  // Título del reporte
   doc.setFontSize(16);
   doc.text('Reporte Mensual de Inventario - Bajacar', 10, yOffset);
   doc.setFontSize(12);
@@ -429,23 +431,28 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     doc.text('Productos Insertados:', 10, yOffset);
     yOffset += 10;
 
-    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock'];
+    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock', 'Descripción'];
     const rowsInsertados = insertados.map((p) => [
       p.id_producto,
       p.nombre_producto,
       p.categoria,
-      `$${parseFloat(p.precio_compra).toFixed(2)}`,  // Convertir a número
-      `$${parseFloat(p.precio_venta).toFixed(2)}`,   // Convertir a número
+      `$${parseFloat(p.precio_compra).toFixed(2)}`, // Asegúrate de que sean números
+      `$${parseFloat(p.precio_venta).toFixed(2)}`,
       p.stock_actual,
+      p.descripcion,
     ]);
- 
+
+    console.log('Rows Insertados:', rowsInsertados); // Verifica cómo se ven los datos antes de pasarlos a autoTable
+
     doc.autoTable({
       head: [headers],
       body: rowsInsertados,
       startY: yOffset,
     });
-    console.log('Tabla insertados generada');  // Verifica que se generó la tabla
+
     yOffset = doc.lastAutoTable.finalY + 10;
+  } else {
+    console.log('No hay productos insertados para este mes.');
   }
 
   // Si hay productos actualizados, agregarlos a la tabla
@@ -458,18 +465,23 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       p.id_producto,
       p.nombre_producto,
       p.categoria,
-      `$${parseFloat(p.precio_compra).toFixed(2)}`,  // Convertir a número
-      `$${parseFloat(p.precio_venta).toFixed(2)}`,   // Convertir a número
+      `$${parseFloat(p.precio_compra).toFixed(2)}`,
+      `$${parseFloat(p.precio_venta).toFixed(2)}`,
       p.stock_actual,
+      p.descripcion,
     ]);
+
+    console.log('Rows Actualizados:', rowsActualizados); // Verifica cómo se ven los datos antes de pasarlos a autoTable
 
     doc.autoTable({
       head: [headers],
       body: rowsActualizados,
       startY: yOffset,
     });
-    console.log('Tabla insertados generada');  // Verifica que se generó la tabla
+
     yOffset = doc.lastAutoTable.finalY + 10;
+  } else {
+    console.log('No hay productos actualizados para este mes.');
   }
 
   // Guardar el PDF

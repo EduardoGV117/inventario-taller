@@ -1,8 +1,7 @@
 const navBtns = document.querySelectorAll('.nav-btn');
 const sections = document.querySelectorAll('.section');
 // Asegúrate de que los modales están ocultos al principio
-document.getElementById('custom-modal').classList.add('hidden');
-document.getElementById('stock-modal').classList.add('hidden');
+
 
 navBtns.forEach(btn => {
   btn.addEventListener('click', () => {
@@ -66,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selected = [...document.querySelectorAll('#products-table tbody input[type="checkbox"]:checked')];
     const updates = selected.map((checkbox) => {
       const id = checkbox.dataset.id;
-      showStockModal(id);
+      const amount = prompt(`¿Cuánto deseas agregar al stock del producto ${id}?`);
       return { id, amount: parseInt(amount, 10) };
     });
 
@@ -223,9 +222,9 @@ document.getElementById("submitStockUpdate").addEventListener("click", async () 
 
   const result = await response.json();
   if (result.success) {
-      showModal('Stock actualizado correctamente');
+      alert('Stock actualizado correctamente');
   } else {
-      showModal('Error al actualizar stock');
+      alert('Error al actualizar stock');
   }
 });
 document.addEventListener('DOMContentLoaded', () => {
@@ -318,10 +317,10 @@ document.querySelector('#add-product-section form').addEventListener('submit', a
 
   if (response.ok) {
     const nuevoProducto = await response.json();
-    showModal('Producto agregado con éxito');
+    alert('Producto agregado con éxito');
     // Podrías actualizar la lista de productos aquí
   } else {
-    showModal('Error al agregar producto');
+    alert('Error al agregar producto');
   }
 });
 
@@ -350,95 +349,8 @@ document.querySelector('#sales-section form').addEventListener('submit', async (
 
   if (response.ok) {
     const ventaRegistrada = await response.json();
-    showModal('Venta registrada con éxito');
+    alert('Venta registrada con éxito');
   } else {
-    showModal('Error al registrar la venta');
+    alert('Error al registrar la venta');
   }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Seleccionamos los modales y elementos de interacción
-  const customModal = document.getElementById('custom-modal');
-  const stockModal = document.getElementById('stock-modal');
-  const modalClose = document.getElementById('modal-close');
-  const modalCloseStock = document.getElementById('modal-close-stock');
-  const modalAccept = document.getElementById('modal-accept');
-  const stockInput = document.getElementById('stock-input');
-  const modalMessageAlert = document.getElementById('modal-message-alert');
-  const modalMessage = document.getElementById('modal-message');
-
-  // Aseguramos que ambos modales estén ocultos al cargar la página
-  customModal.classList.add('hidden');
-  stockModal.classList.add('hidden');
-
-  // Variable global para almacenar el ID del producto
-  let productIdToUpdate = null;
-
-  // Función para mostrar el modal de alerta con mensaje
-  function showModal(message) {
-    modalMessageAlert.textContent = message; // Actualizar el mensaje
-    customModal.classList.remove('hidden'); // Mostrar el modal de alerta
-    stockModal.classList.add('hidden'); // Asegurarse de que el modal de stock esté oculto
-  }
-
-  // Función para mostrar el modal de stock con el mensaje del producto
-  function showStockModal(productId) {
-    productIdToUpdate = productId; // Guardamos el ID del producto que se actualizará
-    modalMessage.textContent = `¿Cuánto deseas agregar al stock del producto ${productId}?`;
-    stockInput.value = ''; // Limpiamos el campo de entrada
-    stockModal.classList.remove('hidden'); // Mostrar el modal de stock
-    customModal.classList.add('hidden'); // Asegurarnos de que el modal de alerta esté oculto
-  }
-
-  // Función para cerrar cualquier modal
-  function closeModal(modal) {
-    modal.classList.add('hidden');
-  }
-
-  // Añadir eventos de cierre de modales
-  if (modalClose) {
-    modalClose.addEventListener('click', () => {
-      closeModal(customModal); // Cerrar el modal de alerta
-    });
-  }
-
-  if (modalCloseStock) {
-    modalCloseStock.addEventListener('click', () => {
-      closeModal(stockModal); // Cerrar el modal de stock
-    });
-  }
-
-  // Acción de aceptar el cambio de stock
-  if (modalAccept) {
-    modalAccept.addEventListener('click', async () => {
-      const quantity = parseInt(stockInput.value, 10);
-
-      // Validamos que la cantidad sea un número mayor que cero
-      if (!quantity || quantity <= 0) {
-        showModal('Por favor ingresa una cantidad válida.');
-        return;
-      }
-
-      // Realizamos la petición para actualizar el stock
-      const response = await fetch('/productos/actualizar-stock', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_producto: productIdToUpdate, cantidad: quantity })
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        showModal('Stock actualizado correctamente');
-      } else {
-        showModal('Error al actualizar stock');
-      }
-
-      closeModal(stockModal); // Cerrar el modal después de actualizar
-    });
-  }
-
-  // Ejemplo de cómo se podría llamar a `showStockModal` con un ID de producto
-  // Esto dependerá de tu lógica para abrir este modal, por ejemplo al hacer clic en un botón
-  // showStockModal(1); // Llamada de ejemplo para abrir el modal de stock con un producto con ID 1
 });

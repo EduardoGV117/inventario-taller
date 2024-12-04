@@ -362,11 +362,15 @@ const cargarProductosPorMes = async (mes) => {
     const response = await fetch(`/productos?mes=${mes}`);
     if (!response.ok) throw new Error('Error al cargar productos');
     const productos = await response.json();
-    console.log('Productos recibidos:', productos);  // Agrega este log para verificar los productos
 
-    // Categorizar productos
+    console.log('Productos recibidos:', productos);  // Verifica los productos
+
+    // Filtrar por tipo de cambio (insertados y actualizados)
     const insertados = productos.filter((p) => p.tipo_cambio === 'insertado');
     const actualizados = productos.filter((p) => p.tipo_cambio === 'actualizado');
+
+    console.log('Insertados:', insertados);  // Verifica los productos insertados
+    console.log('Actualizados:', actualizados);  // Verifica los productos actualizados
 
     return { insertados, actualizados };
   } catch (error) {
@@ -374,6 +378,8 @@ const cargarProductosPorMes = async (mes) => {
     return { insertados: [], actualizados: [] };
   }
 };
+
+
 const mostrarProductosEnTablas = (insertados, actualizados) => {
   const tablaInsertados = document.getElementById('tabla-insertados').querySelector('tbody');
   const tablaActualizados = document.getElementById('tabla-actualizados').querySelector('tbody');

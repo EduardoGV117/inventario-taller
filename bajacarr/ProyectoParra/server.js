@@ -244,7 +244,8 @@ app.post('/api/ventas', ensureAuthenticated, async (req, res) => {
 });
 
 app.get('/productos', ensureAuthenticated, async (req, res) => {
-  const mes = req.query.mes;  // Obtener el mes seleccionado
+  const mes = req.query.mes;  // Obtener el mes seleccionado (como número)
+  const año = new Date().getFullYear();  // Obtener el año actual
   try {
     const query = `
       SELECT id_producto, nombre_producto, categoria,
@@ -252,15 +253,19 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
              CAST(precio_venta AS FLOAT) AS precio_venta,
              stock_actual, descripcion, fecha_creacion, fecha_actualizacion,
              CASE 
-               WHEN EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1 THEN 'insertado'
-               WHEN EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1 THEN 'actualizado'
+               WHEN EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1
+                    AND EXTRACT(YEAR FROM fecha_creacion AT TIME ZONE 'UTC') = $2 THEN 'insertado'
+               WHEN EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1
+                    AND EXTRACT(YEAR FROM fecha_actualizacion AT TIME ZONE 'UTC') = $2 THEN 'actualizado'
                ELSE NULL
              END AS tipo_cambio
       FROM productos
-      WHERE EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1 
-         OR EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1
+      WHERE (EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1
+            AND EXTRACT(YEAR FROM fecha_creacion AT TIME ZONE 'UTC') = $2)
+         OR (EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1
+            AND EXTRACT(YEAR FROM fecha_actualizacion AT TIME ZONE 'UTC') = $2)
     `;
-    const result = await client.query(query, [mes]);  // Filtrar por mes
+    const result = await client.query(query, [mes, año]);  // Filtrar por mes y año
     res.json(result.rows);  // Devolver los productos filtrados
   } catch (err) {
     console.error('Error al obtener los productos:', err);

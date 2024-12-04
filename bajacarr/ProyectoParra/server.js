@@ -250,9 +250,15 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
       SELECT id_producto, nombre_producto, categoria,
              CAST(precio_compra AS FLOAT) AS precio_compra,
              CAST(precio_venta AS FLOAT) AS precio_venta,
-             stock_actual, descripcion, fecha_creacion, fecha_actualizacion
+             stock_actual, descripcion, fecha_creacion, fecha_actualizacion,
+             CASE 
+               WHEN EXTRACT(MONTH FROM fecha_creacion) = $1 THEN 'insertado'
+               WHEN EXTRACT(MONTH FROM fecha_actualizacion) = $1 THEN 'actualizado'
+               ELSE NULL
+             END AS tipo_cambio
       FROM productos
-      WHERE EXTRACT(MONTH FROM fecha_creacion) = $1
+      WHERE EXTRACT(MONTH FROM fecha_creacion) = $1 
+         OR EXTRACT(MONTH FROM fecha_actualizacion) = $1
     `;
     const result = await client.query(query, [mes]);
     res.json(result.rows);
@@ -261,6 +267,7 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
     res.status(500).send('Error al obtener los productos');
   }
 });
+
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {

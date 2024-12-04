@@ -325,37 +325,6 @@ document.querySelector('#add-product-section form').addEventListener('submit', a
   }
 });
 
-document.querySelector('#sales-section form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const idProducto = document.getElementById('product-to-sell').value;
-  const cantidad = parseInt(document.getElementById('sell-quantity').value);
-  const total = cantidad * precioVenta; // Precio de venta debe obtenerse de la base de datos o un campo oculto
-  const idUsuario = 1; // Suponiendo que el usuario tiene ID 1 (esto debería ser dinámico)
-
-  const venta = {
-    id_producto: idProducto,
-    cantidad: cantidad,
-    total: total,
-    id_usuario: idUsuario,
-  };
-
-  const response = await fetch('/ventas', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(venta),
-  });
-
-  if (response.ok) {
-    const ventaRegistrada = await response.json();
-    alert('Venta registrada con éxito');
-  } else {
-    alert('Error al registrar la venta');
-  }
-});
-
 
 const cargarProductosPorMes = async (mes) => {
   try {

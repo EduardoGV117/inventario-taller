@@ -42,7 +42,9 @@
                 <li><button data-target="stock-management" class="nav-btn">Actualizar Stock</button></li>
                 <li><button data-target="sales-section" class="nav-btn">Ventas</button></li>
                 <li><button data-target="losses-section" class="nav-btn">Pérdidas</button></li>
-                <li><button data-target="reports-section" class="nav-btn">Reportes</button></li>
+                <li><button data-target="reports-section" class="nav-btn">Reportes de inventario</button></li>
+                <li><button data-target="sales-report-section" class="nav-btn">Reportes de ventas</button></li>
+                
             </ul>
         </nav>
 
@@ -251,7 +253,6 @@
             <!-- Reportes de Ventas -->
             <section id="sales-report-section" class="section hidden">
               <h2>Generar Reporte de Ventas/Bajas</h2>
-
               <!-- Selección de Mes y Año -->
               <label for="report-month">Seleccionar Mes:</label>
               <select id="report-month">
@@ -268,7 +269,6 @@
                 <option value="11">Noviembre</option>
                 <option value="12">Diciembre</option>
               </select>
-
               <label for="report-year">Seleccionar Año:</label>
               <input type="number" id="report-year" min="2000" placeholder="Año" required>
 
@@ -295,7 +295,6 @@
               <!-- Botón para generar el PDF del reporte -->
               <button id="generate-sales-pdf" class="hidden">Generar PDF</button>
             </section>
-
         </main>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>

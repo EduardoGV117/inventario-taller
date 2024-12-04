@@ -111,8 +111,9 @@ app.get(
 
 // Página de error para usuarios no autorizados
 app.get('/unauthorized', (req, res) => {
-  res.status(403).send('Acceso denegado: tu correo no está autorizado.');
+  res.sendFile(path.join(__dirname, 'public', 'unauthorized.html'));
 });
+
 
 // Ruta principal protegida
 app.get('/', ensureAuthenticated, (req, res) => {

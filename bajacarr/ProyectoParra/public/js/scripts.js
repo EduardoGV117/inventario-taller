@@ -250,6 +250,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const formatearFechaConHora = (fechaISO) => {
+    const opciones = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    }; // Incluye formato de hora
+    const fecha = new Date(fechaISO);
+    return fecha.toLocaleString('es-MX', opciones); // Ejemplo: "3 de diciembre de 2024, 12:34:56"
+  };
+
   const mostrarProductosEnTabla = (productos) => {
     const tabla = document.getElementById('inventory-table').querySelector('tbody');
     tabla.innerHTML = ''; // Limpia el contenido anterior
@@ -264,8 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${producto.precio_venta}</td>
         <td>${producto.stock_actual}</td>
         <td>${producto.descripcion}</td>
-        <td>${producto.fecha_creacion}</td>
-        <td>${producto.fecha_actualizacion}</td>
+        <td>${formatearFechaConHora(producto.fecha_creacion)}</td>
+        <td>${formatearFechaConHora(producto.fecha_actualizacion)}</td>
       `;
       tabla.appendChild(fila);
     });
@@ -273,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cargarProductos();
 });
+
 
 document.querySelector('#add-product-section form').addEventListener('submit', async (e) => {
   e.preventDefault();

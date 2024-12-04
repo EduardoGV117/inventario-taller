@@ -569,7 +569,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!response.ok) throw new Error('Error al registrar la venta/baja.');
 
       alert('Venta/Baja registrada exitosamente.');
-      location.reload(); // Recargar la página para limpiar el formulario
     } catch (error) {
       console.error(error.message);
       alert('Hubo un error al registrar la venta/baja.');
@@ -577,4 +576,112 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   cargarProductos();
+});
+
+document.getElementById('sales-report-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const mes = document.getElementById('report-month').value;
+  const año = document.getElementById('report-year').value;
+
+  try {
+    const response = await fetch(`/reporte-ventas?mes=${mes}&año=${año}`);
+    if (!response.ok) throw new Error('Error al obtener el reporte de ventas.');
+
+    const ventas = await response.json();
+    const tableBody = document.getElementById('sales-report-table').querySelector('tbody');
+    tableBody.innerHTML = ''; // Limpiar tabla
+
+    ventas.forEach((venta) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${venta.id_factura_proveedor}</td>
+        <td>${venta.fecha_factura}</td>  <!-- Fecha ya formateada -->
+        <td>${venta.nombre_producto}</td>
+        <td>${venta.cantidad}</td>
+        <td>${venta.descripcion}</td>
+        <td>$${parseFloat(venta.total_venta).toFixed(2)}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  } catch (error) {
+    console.error(error.message);
+    alert('Hubo un problema al generar el reporte de ventas.');
+  }
+});
+
+document.getElementById('sales-report-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const mes = document.getElementById('report-month').value;
+  const año = document.getElementById('report-year').value;
+
+  try {
+    const response = await fetch(`/reporte-ventas?mes=${mes}&año=${año}`);
+    if (!response.ok) throw new Error('Error al obtener el reporte de ventas.');
+
+    const ventas = await response.json();
+    const tableBody = document.getElementById('sales-report-table').querySelector('tbody');
+    tableBody.innerHTML = ''; // Limpiar tabla
+
+    ventas.forEach((venta) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${venta.id_factura_proveedor}</td>
+        <td>${venta.fecha_factura}</td>
+        <td>${venta.nombre_producto}</td>
+        <td>${venta.cantidad}</td>
+        <td>${venta.descripcion}</td>
+        <td>$${parseFloat(venta.total_venta).toFixed(2)}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+
+    // Mostrar el botón de generar PDF
+    document.getElementById('generate-sales-pdf').classList.remove('hidden');
+  } catch (error) {
+    console.error(error.message);
+    alert('Hubo un problema al generar el reporte de ventas.');
+  }
+});
+
+// Lógica para generar el PDF del reporte de ventas
+document.getElementById('generate-sales-pdf').addEventListener('click', () => {
+  const doc = new jsPDF();
+  let yOffset = 20;
+
+  // Título
+  doc.setFontSize(16);
+  doc.text('Reporte de Ventas/Bajas - Bajacar', 10, yOffset);
+  doc.setFontSize(12);
+  doc.text(`Mes: ${document.getElementById('report-month').value} - Año: ${document.getElementById('report-year').value}`, 10, yOffset + 10);
+  yOffset += 20;
+
+  // Encabezados de la tabla
+  const headers = ['ID Factura', 'Fecha', 'Producto', 'Cantidad', 'Descripción', 'Total Venta'];
+
+  // Filas de la tabla (datos de ventas)
+  const rows = [];
+  const tableRows = document.querySelectorAll('#sales-report-table tbody tr');
+  tableRows.forEach(row => {
+    const cols = row.querySelectorAll('td');
+    rows.push([
+      cols[0].innerText,  // ID Factura
+      cols[1].innerText,  // Fecha
+      cols[2].innerText,  // Producto
+      cols[3].innerText,  // Cantidad
+      cols[4].innerText,  // Descripción
+      cols[5].innerText   // Total Venta
+    ]);
+  });
+
+  // Agregar tabla al PDF
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: yOffset,
+  });
+
+  // Guardar PDF
+  doc.save('Reporte_Ventas_Bajas.pdf');
 });

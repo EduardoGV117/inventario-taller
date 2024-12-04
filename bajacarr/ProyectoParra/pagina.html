@@ -248,6 +248,93 @@
               </select>
               <button id="generate-pdf">Generar PDF</button>
             </section>
+                        <!-- Reportes -->
+            <section id="reports-section" class="section hidden">
+              <h2>Generar Reporte de Inventario</h2>
+              <label for="report-month">Seleccionar Mes:</label>
+              <select id="report-month">
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+              <button id="generate-pdf">Generar PDF</button>
+            </section>
+                      <!-- Reportes -->
+            <section id="reports-section" class="section hidden">
+              <h2>Generar Reporte de Inventario</h2>
+              <label for="report-month">Seleccionar Mes:</label>
+              <select id="report-month">
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+              <button id="generate-pdf">Generar PDF</button>
+            </section>
+            <!-- Reportes de Ventas -->
+            <section id="sales-report-section" class="section hidden">
+              <h2>Generar Reporte de Ventas/Bajas</h2>
+
+              <!-- Selección de Mes y Año -->
+              <label for="report-month">Seleccionar Mes:</label>
+              <select id="report-month">
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+
+              <label for="report-year">Seleccionar Año:</label>
+              <input type="number" id="report-year" min="2000" placeholder="Año" required>
+
+              <button type="submit" id="generate-sales-report">Generar Reporte</button>
+
+              <!-- Tabla de reportes de ventas -->
+              <h3>Ventas/Bajas Registradas</h3>
+              <table id="sales-report-table">
+                <thead>
+                  <tr>
+                    <th>ID Factura</th>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Descripción</th>
+                    <th>Total Venta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los datos de ventas se mostrarán aquí -->
+                </tbody>
+              </table>
+
+              <!-- Botón para generar el PDF del reporte -->
+              <button id="generate-sales-pdf" class="hidden">Generar PDF</button>
+            </section>   
             
         </main>
     </div>

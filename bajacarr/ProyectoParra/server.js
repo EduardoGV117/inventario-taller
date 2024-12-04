@@ -283,6 +283,34 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
     res.status(500).send('Error al obtener los productos');
   }
 });
+app.get('/reporte-ventas', ensureAuthenticated, async (req, res) => {
+  const { mes, año } = req.query; // Obtener mes y año desde la solicitud
+
+  try {
+    const result = await client.query(
+      `SELECT f.id_factura_proveedor, 
+              TO_CHAR(f.fecha, 'DD/MM/YYYY') AS fecha_factura,  -- Fecha formateada
+              df.id_producto, 
+              p.nombre_producto, 
+              df.cantidad, 
+              df.descripcion, 
+              p.precio_venta, 
+              df.cantidad * p.precio_venta AS total_venta
+       FROM facturas f
+       JOIN detalle_factura df ON f.id_factura = df.id_factura
+       JOIN productos p ON df.id_producto = p.id_producto
+       WHERE EXTRACT(MONTH FROM f.fecha) = $1 AND EXTRACT(YEAR FROM f.fecha) = $2
+       ORDER BY f.fecha DESC`,
+      [mes, año]
+    );
+
+    res.json(result.rows); // Devolver los resultados como respuesta
+  } catch (error) {
+    console.error('Error al obtener el reporte de ventas:', error);
+    res.status(500).send('Error al obtener el reporte de ventas.');
+  }
+});
+
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {

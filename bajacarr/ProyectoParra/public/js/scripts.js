@@ -354,3 +354,55 @@ document.querySelector('#sales-section form').addEventListener('submit', async (
     alert('Error al registrar la venta');
   }
 });
+
+const cargarProductosPorMes = async (mes) => {
+  try {
+    const response = await fetch(`/productos?mes=${mes}`);
+    if (!response.ok) throw new Error('Error al cargar productos');
+    return await response.json();
+  } catch (error) {
+    console.error(error.message);
+    return [];
+  }
+};
+document.getElementById('generate-pdf').addEventListener('click', async () => {
+  const mesSeleccionado = document.getElementById('report-month').value;
+  const productos = await cargarProductosPorMes(mesSeleccionado);
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const pageHeight = doc.internal.pageSize.height;
+  let yOffset = 20;
+
+  // Encabezado del PDF
+  doc.setFontSize(16);
+  doc.text('Reporte de Inventario - Bajacar', 10, yOffset);
+  doc.setFontSize(12);
+  doc.text(`Mes: ${mesSeleccionado} - Generado el: ${new Date().toLocaleDateString()}`, 10, yOffset + 10);
+  yOffset += 20;
+
+  // Datos de productos
+  const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock'];
+  const rows = productos.map((producto) => [
+    producto.id_producto,
+    producto.nombre_producto,
+    producto.categoria,
+    `$${producto.precio_compra.toFixed(2)}`,
+    `$${producto.precio_venta.toFixed(2)}`,
+    producto.stock_actual,
+  ]);
+
+  // Crear tabla
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: yOffset,
+    margin: { top: 10 },
+    styles: { fontSize: 10, cellPadding: 3 },
+    headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
+  });
+
+  // Guardar PDF
+  doc.save(`Reporte_Inventario_Mes_${mesSeleccionado}.pdf`);
+});

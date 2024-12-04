@@ -243,6 +243,22 @@ app.post('/api/ventas', ensureAuthenticated, async (req, res) => {
   }
 });
 
+app.get('/productos', ensureAuthenticated, async (req, res) => {
+  const mes = req.query.mes;
+  try {
+    const query = `
+      SELECT * 
+      FROM productos 
+      WHERE EXTRACT(MONTH FROM fecha_creacion) = $1
+    `;
+    const result = await client.query(query, [mes]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error al obtener los productos:', err);
+    res.status(500).send('Error al obtener los productos');
+  }
+});
+
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {

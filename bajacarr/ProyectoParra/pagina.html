@@ -211,13 +211,25 @@
 
             <!-- Reportes -->
             <section id="reports-section" class="section hidden">
-                <h2>Reportes de Inventario</h2>
-                <button id="generate-report-btn">Generar Reporte de Inventario Noviembre (PDF)</button>
-                <div id="report-content" class="hidden">
-                    <h3>Reporte de Inventario</h3>
-                    <pre id="report-details"></pre>
-                </div>
+              <h2>Generar Reporte de Inventario</h2>
+              <label for="report-month">Seleccionar Mes:</label>
+              <select id="report-month">
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+              <button id="generate-pdf">Generar PDF</button>
             </section>
+            
         </main>
     </div>
     <script src="/js/scripts.js"></script>

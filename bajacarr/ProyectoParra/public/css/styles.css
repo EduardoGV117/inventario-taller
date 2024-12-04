@@ -289,3 +289,23 @@ form button:hover {
     background-color: var(--text-color);
     color: var(--bg-color);
 }
+
+#report-month, #generate-pdf {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--highlight-color);
+    border-radius: 5px;
+  }
+  
+  #generate-pdf {
+    background-color: var(--highlight-color);
+    color: var(--text-color);
+    cursor: pointer;
+  }
+  
+  #generate-pdf:hover {
+    background-color: var(--highlight-hover);
+    color: var(--bg-color);
+  }
+  

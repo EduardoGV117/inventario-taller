@@ -563,12 +563,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Lógica para generar el PDF del reporte de ventas
-// Escuchar el evento de submit en el formulario de reporte de ventas
 document.getElementById('sales-report-form').addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  const mes = document.getElementById('report-month').value;
-  const año = document.getElementById('report-year').value;
+  const mes = document.getElementById('sales-report-month').value;
+  const año = document.getElementById('sales-report-year').value;
 
   try {
     const response = await fetch(`/reporte-ventas?mes=${mes}&año=${año}`);
@@ -600,50 +599,10 @@ document.getElementById('sales-report-form').addEventListener('submit', async (e
 });
 
 // Lógica para generar el PDF del reporte de ventas
-document.getElementById('generate-sales-pdf').addEventListener('click', () => {
-  const doc = new jsPDF();
-  let yOffset = 20;
-
-  // Título
-  doc.setFontSize(16);
-  doc.text('Reporte de Ventas/Bajas - Bajacar', 10, yOffset);
-  doc.setFontSize(12);
-  doc.text(`Mes: ${document.getElementById('report-month').value} - Año: ${document.getElementById('report-year').value}`, 10, yOffset + 10);
-  yOffset += 20;
-
-  // Encabezados de la tabla
-  const headers = ['ID Factura', 'Fecha', 'Producto', 'Cantidad', 'Descripción', 'Total Venta'];
-
-  // Filas de la tabla (datos de ventas)
-  const rows = [];
-  const tableRows = document.querySelectorAll('#sales-report-table tbody tr');
-  tableRows.forEach(row => {
-    const cols = row.querySelectorAll('td');
-    rows.push([
-      cols[0].innerText,  // ID Factura
-      cols[1].innerText,  // Fecha
-      cols[2].innerText,  // Producto
-      cols[3].innerText,  // Cantidad
-      cols[4].innerText,  // Descripción
-      cols[5].innerText   // Total Venta
-    ]);
-  });
-
-  // Agregar tabla al PDF
-  doc.autoTable({
-    head: [headers],
-    body: rows,
-    startY: yOffset,
-  });
-
-  // Guardar PDF
-  doc.save('Reporte_Ventas_Bajas.pdf');
-});
 document.getElementById('generate-sales-pdf').addEventListener('click', async () => {
-  const mesSeleccionado = document.getElementById('sales-report-month').value; // Mes seleccionado
-  const ventas = await cargarVentasPorMes(mesSeleccionado); // Cargar ventas del mes
+  const mesSeleccionado = document.getElementById('sales-report-month').value;
+  const ventas = await cargarVentasPorMes(mesSeleccionado);
 
-  // Crear PDF
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let yOffset = 20;
@@ -654,21 +613,20 @@ document.getElementById('generate-sales-pdf').addEventListener('click', async ()
   doc.text(`Mes: ${mesSeleccionado} - Generado el: ${new Date().toLocaleDateString()}`, 10, yOffset + 10);
   yOffset += 20;
 
-  // Si hay ventas, agregarlas al PDF
   if (ventas.length > 0) {
     const headers = ['ID Factura', 'Fecha', 'Producto', 'Cantidad', 'Descripción', 'Total'];
-    const rowsVentas = ventas.map((v) => [
-      v.id_factura_proveedor,
-      v.fecha_factura,
-      v.nombre_producto,
-      v.cantidad,
-      v.descripcion,
-      `$${parseFloat(v.total_venta).toFixed(2)}`,
+    const rows = ventas.map((venta) => [
+      venta.id_factura_proveedor,
+      venta.fecha_factura,
+      venta.nombre_producto,
+      venta.cantidad,
+      venta.descripcion,
+      `$${parseFloat(venta.total_venta).toFixed(2)}`,
     ]);
 
     doc.autoTable({
       head: [headers],
-      body: rowsVentas,
+      body: rows,
       startY: yOffset,
     });
 
@@ -677,6 +635,5 @@ document.getElementById('generate-sales-pdf').addEventListener('click', async ()
     doc.text('No hay ventas registradas para este mes.', 10, yOffset);
   }
 
-  // Guardar el PDF
-  doc.save(`Reporte_Mensual_Ventas_Mes_${mesSeleccionado}.pdf`);
+  doc.save(`Reporte_Ventas_Mes_${mesSeleccionado}.pdf`);
 });

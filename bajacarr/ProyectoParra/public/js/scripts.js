@@ -437,3 +437,28 @@ document.getElementById('modal-accept').addEventListener('click', async () => {
   closeModal(); // Cerrar el modal después de la acción
 });
 
+
+// Función para mostrar el modal con un mensaje
+function showModal(message) {
+  const modal = document.getElementById('custom-modal');
+  const messageElement = document.getElementById('modal-message-alert');
+  messageElement.textContent = message;
+
+  closeStockModal(); // Cerrar cualquier modal abierto
+  modal.classList.remove('hidden'); // Mostrar el modal
+}
+
+// Función para mostrar el modal de stock
+function showStockModal(productId) {
+  const modal = document.getElementById('stock-modal');
+  const messageElement = document.getElementById('modal-message-stock');
+  const inputField = document.getElementById('stock-input');
+  
+  productIdToUpdate = productId;
+  messageElement.textContent = `¿Cuánto deseas agregar al stock del producto ${productId}?`;
+  
+  closeModal(); // Cerrar cualquier modal abierto
+  inputField.value = '';
+  
+  modal.classList.remove('hidden'); // Mostrar el modal
+}

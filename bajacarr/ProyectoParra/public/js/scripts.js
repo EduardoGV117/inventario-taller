@@ -361,6 +361,7 @@ const cargarProductosPorMes = async (mes) => {
     const response = await fetch(`/productos?mes=${mes}`);
     if (!response.ok) throw new Error('Error al cargar productos');
     const productos = await response.json();
+    console.log('Productos recibidos:', productos);  // Agrega este log para verificar los productos
 
     // Categorizar productos
     const insertados = productos.filter((p) => p.tipo_cambio === 'insertado');
@@ -372,10 +373,45 @@ const cargarProductosPorMes = async (mes) => {
     return { insertados: [], actualizados: [] };
   }
 };
+const mostrarProductosEnTablas = (insertados, actualizados) => {
+  const tablaInsertados = document.getElementById('tabla-insertados').querySelector('tbody');
+  const tablaActualizados = document.getElementById('tabla-actualizados').querySelector('tbody');
+
+  // Limpiar las tablas antes de llenarlas
+  tablaInsertados.innerHTML = '';
+  tablaActualizados.innerHTML = '';
+
+  // Insertar productos en la tabla de insertados
+  insertados.forEach((p) => {
+    const fila = `<tr>
+      <td>${p.id_producto}</td>
+      <td>${p.nombre_producto}</td>
+      <td>${p.categoria}</td>
+      <td>$${p.precio_compra.toFixed(2)}</td>
+      <td>$${p.precio_venta.toFixed(2)}</td>
+      <td>${p.stock_actual}</td>
+    </tr>`;
+    tablaInsertados.innerHTML += fila;
+  });
+
+  // Insertar productos en la tabla de actualizados
+  actualizados.forEach((p) => {
+    const fila = `<tr>
+      <td>${p.id_producto}</td>
+      <td>${p.nombre_producto}</td>
+      <td>${p.categoria}</td>
+      <td>$${p.precio_compra.toFixed(2)}</td>
+      <td>$${p.precio_venta.toFixed(2)}</td>
+      <td>${p.stock_actual}</td>
+    </tr>`;
+    tablaActualizados.innerHTML += fila;
+  });
+};
 
 document.getElementById('generate-pdf').addEventListener('click', async () => {
   const mesSeleccionado = document.getElementById('report-month').value;
   const { insertados, actualizados } = await cargarProductosPorMes(mesSeleccionado);
+  mostrarProductosEnTablas(insertados, actualizados);  // Mostrar productos en la interfaz
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -438,47 +474,4 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
   // Guardar el PDF
   doc.save(`Reporte_Mensual_Inventario_Mes_${mesSeleccionado}.pdf`);
-});
-
-document.getElementById('generate-pdf').addEventListener('click', async () => {
-  const mesSeleccionado = document.getElementById('report-month').value;
-  const productos = await cargarProductosPorMes(mesSeleccionado);
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const pageHeight = doc.internal.pageSize.height;
-  let yOffset = 20;
-
-  // Encabezado del PDF
-  doc.setFontSize(16);
-  doc.text('Reporte de Inventario - Bajacar', 10, yOffset);
-  doc.setFontSize(12);
-  doc.text(`Mes: ${mesSeleccionado} - Generado el: ${new Date().toLocaleDateString()}`, 10, yOffset + 10);
-  yOffset += 20;
-
-  // Datos de productos
-  const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock'];
-  const rows = productos.map((producto) => [
-    producto.id_producto,
-    producto.nombre_producto || 'Sin nombre',
-    producto.categoria || 'Sin categoría',
-    `$${parseFloat(producto.precio_compra || 0).toFixed(2)}`, // Convertir cadena a número
-    `$${parseFloat(producto.precio_venta || 0).toFixed(2)}`,  // Convertir cadena a número
-    producto.stock_actual || 0,
-    producto.descripcion || 'Sin descripción',
-  ]);
-
-  // Crear tabla
-  doc.autoTable({
-    head: [headers],
-    body: rows,
-    startY: yOffset,
-    margin: { top: 10 },
-    styles: { fontSize: 10, cellPadding: 3 },
-    headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-    alternateRowStyles: { fillColor: [245, 245, 245] },
-  });
-
-  // Guardar PDF
-  doc.save(`Reporte_Inventario_Mes_${mesSeleccionado}.pdf`);
 });

@@ -261,13 +261,13 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
          OR EXTRACT(MONTH FROM fecha_actualizacion) = $1
     `;
     const result = await client.query(query, [mes]);
+    console.log(result.rows);  // Agrega este log para ver los datos
     res.json(result.rows);
   } catch (err) {
     console.error('Error al obtener los productos:', err);
     res.status(500).send('Error al obtener los productos');
   }
 });
-
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {

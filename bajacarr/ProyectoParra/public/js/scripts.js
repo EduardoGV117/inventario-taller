@@ -354,6 +354,20 @@ const cargarProductosPorMes = async (mes) => {
     return { insertados: [], actualizados: [] };
   }
 };
+const cargarVentasPorMes = async (mes) => {
+  try {
+    const response = await fetch(`/reporte-ventas?mes=${mes}`);
+    if (!response.ok) throw new Error('Error al cargar ventas');
+    const ventas = await response.json();
+
+    console.log('Ventas recibidas:', ventas);
+
+    return ventas;
+  } catch (error) {
+    console.error(error.message);
+    return [];
+  }
+};
 
 
 const mostrarProductosEnTablas = (insertados, actualizados) => {
@@ -624,4 +638,45 @@ document.getElementById('generate-sales-pdf').addEventListener('click', () => {
 
   // Guardar PDF
   doc.save('Reporte_Ventas_Bajas.pdf');
+});
+document.getElementById('generate-sales-pdf').addEventListener('click', async () => {
+  const mesSeleccionado = document.getElementById('sales-report-month').value; // Mes seleccionado
+  const ventas = await cargarVentasPorMes(mesSeleccionado); // Cargar ventas del mes
+
+  // Crear PDF
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let yOffset = 20;
+
+  doc.setFontSize(16);
+  doc.text('Reporte Mensual de Ventas/Bajas - Bajacar', 10, yOffset);
+  doc.setFontSize(12);
+  doc.text(`Mes: ${mesSeleccionado} - Generado el: ${new Date().toLocaleDateString()}`, 10, yOffset + 10);
+  yOffset += 20;
+
+  // Si hay ventas, agregarlas al PDF
+  if (ventas.length > 0) {
+    const headers = ['ID Factura', 'Fecha', 'Producto', 'Cantidad', 'Descripción', 'Total'];
+    const rowsVentas = ventas.map((v) => [
+      v.id_factura_proveedor,
+      v.fecha_factura,
+      v.nombre_producto,
+      v.cantidad,
+      v.descripcion,
+      `$${parseFloat(v.total_venta).toFixed(2)}`,
+    ]);
+
+    doc.autoTable({
+      head: [headers],
+      body: rowsVentas,
+      startY: yOffset,
+    });
+
+    yOffset = doc.lastAutoTable.finalY + 10;
+  } else {
+    doc.text('No hay ventas registradas para este mes.', 10, yOffset);
+  }
+
+  // Guardar el PDF
+  doc.save(`Reporte_Mensual_Ventas_Mes_${mesSeleccionado}.pdf`);
 });

@@ -359,18 +359,25 @@ document.querySelector('#sales-section form').addEventListener('submit', async (
 
 const cargarProductosPorMes = async (mes) => {
   try {
-    const response = await fetch(`/productos?mes=${mes}`);
+    const response = await fetch(`/productos`); // Obtén toda la tabla sin filtrar
     if (!response.ok) throw new Error('Error al cargar productos');
     const productos = await response.json();
 
-    console.log('Productos recibidos:', productos);  // Verifica los productos recibidos
+    console.log('Productos recibidos:', productos); // Verifica que la tabla completa se recibe correctamente
 
-    // Categorizamos los productos
-    const insertados = productos.filter((p) => p.tipo_cambio === 'insertado');
-    const actualizados = productos.filter((p) => p.tipo_cambio === 'actualizado');
+    // Filtrar productos insertados y actualizados
+    const insertados = productos.filter((p) => {
+      const fechaCreacion = new Date(p.fecha_creacion); // Convierte la fecha a objeto Date
+      return fechaCreacion.getMonth() + 1 === parseInt(mes); // Compara el mes (getMonth es 0-indexado)
+    });
 
-    console.log('Insertados:', insertados);  // Verifica los productos insertados
-    console.log('Actualizados:', actualizados);  // Verifica los productos actualizados
+    const actualizados = productos.filter((p) => {
+      const fechaActualizacion = new Date(p.fecha_actualizacion); // Convierte la fecha a objeto Date
+      return fechaActualizacion.getMonth() + 1 === parseInt(mes); // Compara el mes (getMonth es 0-indexado)
+    });
+
+    console.log('Insertados:', insertados); // Productos insertados en el mes seleccionado
+    console.log('Actualizados:', actualizados); // Productos actualizados en el mes seleccionado
 
     return { insertados, actualizados };
   } catch (error) {
@@ -415,11 +422,8 @@ const mostrarProductosEnTablas = (insertados, actualizados) => {
   });
 };
 document.getElementById('generate-pdf').addEventListener('click', async () => {
-  const mesSeleccionado = document.getElementById('report-month').value;
-  const { insertados, actualizados } = await cargarProductosPorMes(mesSeleccionado); // Obtener productos filtrados
-
-  console.log('Insertados:', insertados); // Verifica los productos insertados
-  console.log('Actualizados:', actualizados); // Verifica los productos actualizados
+  const mesSeleccionado = document.getElementById('report-month').value; // Obtener el mes seleccionado
+  const { insertados, actualizados } = await cargarProductosPorMes(mesSeleccionado); // Filtrar en el frontend
 
   // Crear PDF
   const { jsPDF } = window.jspdf;
@@ -443,13 +447,11 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       p.id_producto,
       p.nombre_producto,
       p.categoria,
-      `$${parseFloat(p.precio_compra).toFixed(2)}`, // Asegúrate de que sean números
+      `$${parseFloat(p.precio_compra).toFixed(2)}`,
       `$${parseFloat(p.precio_venta).toFixed(2)}`,
       p.stock_actual,
       p.descripcion,
     ]);
-
-    console.log('Rows Insertados:', rowsInsertados); // Verifica cómo se ven los datos antes de pasarlos a autoTable
 
     doc.autoTable({
       head: [headers],
@@ -477,8 +479,6 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       p.stock_actual,
       p.descripcion,
     ]);
-
-    console.log('Rows Actualizados:', rowsActualizados); // Verifica cómo se ven los datos antes de pasarlos a autoTable
 
     doc.autoTable({
       head: [headers],

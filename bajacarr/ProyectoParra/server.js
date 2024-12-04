@@ -244,7 +244,7 @@ app.post('/api/ventas', ensureAuthenticated, async (req, res) => {
 });
 
 app.get('/productos', ensureAuthenticated, async (req, res) => {
-  const mes = req.query.mes;  // Mes seleccionado como número
+  const mes = req.query.mes;  // Mes seleccionado como número ajsute aqui para poder cargar
   const año = new Date().getFullYear();  // Año actual
   
   try {
@@ -272,7 +272,6 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
     res.status(500).send('Error al obtener los productos');
   }
 });
-
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {

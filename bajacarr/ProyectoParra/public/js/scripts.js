@@ -429,22 +429,22 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     doc.text('Productos Insertados:', 10, yOffset);
     yOffset += 10;
 
-    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock', 'Descripción'];
+    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock'];
     const rowsInsertados = insertados.map((p) => [
       p.id_producto,
       p.nombre_producto,
       p.categoria,
-      `$${parseFloat(p.precio_compra).toFixed(2)}`, // Asegúrate de que sean números
-      `$${parseFloat(p.precio_venta).toFixed(2)}`,
+      `$${parseFloat(p.precio_compra).toFixed(2)}`,  // Convertir a número
+      `$${parseFloat(p.precio_venta).toFixed(2)}`,   // Convertir a número
       p.stock_actual,
-      p.descripcion,
     ]);
-
+ 
     doc.autoTable({
       head: [headers],
       body: rowsInsertados,
       startY: yOffset,
     });
+    console.log('Tabla insertados generada');  // Verifica que se generó la tabla
     yOffset = doc.lastAutoTable.finalY + 10;
   }
 
@@ -458,10 +458,9 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       p.id_producto,
       p.nombre_producto,
       p.categoria,
-      `$${parseFloat(p.precio_compra).toFixed(2)}`,
-      `$${parseFloat(p.precio_venta).toFixed(2)}`,
+      `$${parseFloat(p.precio_compra).toFixed(2)}`,  // Convertir a número
+      `$${parseFloat(p.precio_venta).toFixed(2)}`,   // Convertir a número
       p.stock_actual,
-      p.descripcion,
     ]);
 
     doc.autoTable({
@@ -469,6 +468,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       body: rowsActualizados,
       startY: yOffset,
     });
+    console.log('Tabla insertados generada');  // Verifica que se generó la tabla
     yOffset = doc.lastAutoTable.finalY + 10;
   }
 

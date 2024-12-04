@@ -164,29 +164,48 @@
           </div>
                         
             <!-- Ventas -->
-            <section id="sales-section" class="section">
-              <h2>Ventas / Bajas de Inventario</h2>
+            <section id="sales-section" class="section hidden">
+              <h2>Ventas/Bajas del Inventario</h2>
+            
+              <!-- Formulario para asociar productos a una factura -->
               <form id="sales-form">
-                  <label for="invoice-number">Número de Factura:</label>
-                  <input type="text" id="invoice-number" required>
-                  
-                  <h3>Seleccionar Productos</h3>
-                  <table id="inventory-table">
-                      <thead>
-                          <tr>
-                              <th>Seleccionar</th>
-                              <th>Producto</th>
-                              <th>Cantidad</th>
-                          </tr>
-                      </thead>
-                      <tbody id="product-list">
-                          <!-- Aquí se llenarán los productos desde el backend -->
-                      </tbody>
-                  </table>
-          
-                  <button type="submit">Registrar Venta</button>
+                <label for="invoice-id">ID de la Factura:</label>
+                <input type="text" id="invoice-id" placeholder="ID de la factura" required>
+            
+                <label for="product-select">Seleccionar Producto:</label>
+                <select id="product-select">
+                  <!-- Opciones dinámicas de productos cargados desde el inventario -->
+                </select>
+            
+                <label for="quantity">Cantidad:</label>
+                <input type="number" id="quantity" placeholder="Cantidad" min="1" required>
+            
+                <label for="description">Descripción:</label>
+                <textarea id="description" placeholder="Descripción de la baja" required></textarea>
+            
+                <button type="button" id="add-product">Agregar Producto</button>
               </form>
-          </section>
+            
+              <!-- Tabla de productos seleccionados -->
+              <h3>Productos Seleccionados</h3>
+              <table id="selected-products-table">
+                <thead>
+                  <tr>
+                    <th>ID Producto</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Descripción</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Productos seleccionados se listarán aquí -->
+                </tbody>
+              </table>
+            
+              <button id="finalize-sale">Finalizar Venta/Baja</button>
+            </section>
+            
 
             <!-- Pérdidas -->
             <section id="losses-section" class="section hidden">

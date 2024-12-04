@@ -209,37 +209,32 @@ app.delete('/productos/eliminar', async (req, res) => {
   }
 });
 
-app.post('/api/ventas', ensureAuthenticated, async (req, res) => {
-  const { invoiceNumber, products } = req.body;
+app.post('/ventas', ensureAuthenticated, async (req, res) => {
+  const { invoiceId, productos } = req.body;
 
-  // Crear la factura
-  const userId = req.user.id_usuario;
-  const queryFactura = `INSERT INTO facturas (id_usuario) VALUES ($1) RETURNING id_factura`;
   try {
-      const result = await db.query(queryFactura, [userId]);
-      const facturaId = result.rows[0].id_factura;
+    await client.query('BEGIN'); // Iniciar transacción
 
-      // Insertar los productos en el detalle de la factura
-      const queryDetalle = `
-          INSERT INTO detalle_factura (id_factura, id_producto, cantidad)
-          VALUES ($1, $2, $3)
-      `;
-      for (const product of products) {
-          await db.query(queryDetalle, [facturaId, product.productId, product.quantity]);
+    for (const producto of productos) {
+      // Reducir el stock en el inventario
+      await client.query(
+        'UPDATE productos SET stock_actual = stock_actual - $1 WHERE id_producto = $2 AND stock_actual >= $1',
+        [producto.cantidad, producto.id_producto]
+      );
 
-          // Restar stock del inventario
-          const queryStock = `
-              UPDATE productos
-              SET stock_actual = stock_actual - $1
-              WHERE id_producto = $2
-          `;
-          await db.query(queryStock, [product.quantity, product.productId]);
-      }
+      // Registrar la venta/baja
+      await client.query(
+        'INSERT INTO detalle_factura (id_factura, id_producto, cantidad, descripcion) VALUES ($1, $2, $3, $4)',
+        [invoiceId, producto.id_producto, producto.cantidad, producto.descripcion]
+      );
+    }
 
-      res.status(200).send("Venta registrada correctamente.");
+    await client.query('COMMIT'); // Confirmar transacción
+    res.status(200).send('Venta/Baja registrada correctamente.');
   } catch (error) {
-      console.error("Error al registrar la venta", error);
-      res.status(500).send("Error al registrar la venta.");
+    await client.query('ROLLBACK'); // Revertir transacción en caso de error
+    console.error('Error al registrar la venta/baja:', error);
+    res.status(500).send('Error al registrar la venta/baja.');
   }
 });
 

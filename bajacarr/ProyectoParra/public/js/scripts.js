@@ -442,7 +442,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     doc.text('Productos Insertados:', 10, yOffset);
     yOffset += 10;
 
-    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock', 'Descripción'];
+    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock'];
     const rowsInsertados = insertados.map((p) => [
       p.id_producto,
       p.nombre_producto,
@@ -450,7 +450,6 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       `$${parseFloat(p.precio_compra).toFixed(2)}`,
       `$${parseFloat(p.precio_venta).toFixed(2)}`,
       p.stock_actual,
-      p.descripcion,
     ]);
 
     doc.autoTable({
@@ -466,7 +465,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
   // Si hay productos actualizados, agregarlos a la tabla
   if (actualizados.length > 0) {
-    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock', 'Descripción'];
+    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock'];
     doc.setFontSize(14);
     doc.text('Productos Actualizados:', 10, yOffset);
     yOffset += 10;
@@ -478,7 +477,6 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       `$${parseFloat(p.precio_compra).toFixed(2)}`,
       `$${parseFloat(p.precio_venta).toFixed(2)}`,
       p.stock_actual,
-      p.descripcion,
     ]);
 
     doc.autoTable({
@@ -494,4 +492,89 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
   // Guardar el PDF
   doc.save(`Reporte_Mensual_Inventario_Mes_${mesSeleccionado}.pdf`);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const selectedProducts = []; // Productos seleccionados para la factura
+
+  // Cargar productos del inventario en el selector
+  const cargarProductos = async () => {
+    try {
+      const response = await fetch('/productos');
+      if (!response.ok) throw new Error('Error al cargar productos');
+      const productos = await response.json();
+      const productSelect = document.getElementById('product-select');
+
+      productos.forEach((producto) => {
+        const option = document.createElement('option');
+        option.value = producto.id_producto;
+        option.textContent = `${producto.nombre_producto} (${producto.stock_actual} disponibles)`;
+        productSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  // Agregar un producto a la lista de la factura
+  document.getElementById('add-product').addEventListener('click', () => {
+    const productSelect = document.getElementById('product-select');
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const description = document.getElementById('description').value;
+
+    if (!productSelect.value || !quantity || !description) {
+      alert('Completa todos los campos antes de agregar un producto.');
+      return;
+    }
+
+    const productId = productSelect.value;
+    const productName = productSelect.options[productSelect.selectedIndex].textContent.split('(')[0].trim();
+
+    // Agregar el producto a la lista
+    selectedProducts.push({ id_producto: productId, nombre_producto: productName, cantidad: quantity, descripcion: description });
+
+    // Mostrarlo en la tabla
+    const tableBody = document.getElementById('selected-products-table').querySelector('tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${productId}</td>
+      <td>${productName}</td>
+      <td>${quantity}</td>
+      <td>${description}</td>
+      <td><button class="remove-product">Eliminar</button></td>
+    `;
+    tableBody.appendChild(row);
+
+    // Limpiar campos
+    document.getElementById('quantity').value = '';
+    document.getElementById('description').value = '';
+  });
+
+  // Finalizar la venta/baja
+  document.getElementById('finalize-sale').addEventListener('click', async () => {
+    const invoiceId = document.getElementById('invoice-id').value;
+
+    if (!invoiceId || selectedProducts.length === 0) {
+      alert('Debes agregar al menos un producto y proporcionar un ID de factura.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/ventas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ invoiceId, productos: selectedProducts }),
+      });
+
+      if (!response.ok) throw new Error('Error al registrar la venta/baja.');
+
+      alert('Venta/Baja registrada exitosamente.');
+      location.reload(); // Recargar la página para limpiar el formulario
+    } catch (error) {
+      console.error(error.message);
+      alert('Hubo un error al registrar la venta/baja.');
+    }
+  });
+
+  cargarProductos();
 });

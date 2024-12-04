@@ -407,24 +407,23 @@ const mostrarProductosEnTablas = (insertados, actualizados) => {
     tablaActualizados.innerHTML += fila;
   });
 };
-
 document.getElementById('generate-pdf').addEventListener('click', async () => {
   const mesSeleccionado = document.getElementById('report-month').value;
-  const { insertados, actualizados } = await cargarProductosPorMes(mesSeleccionado);
-  mostrarProductosEnTablas(insertados, actualizados);  // Mostrar productos en la interfaz
+  const { insertados, actualizados } = await cargarProductosPorMes(mesSeleccionado); // Obtener productos
 
+  // Crear el documento PDF
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let yOffset = 20;
 
-  // Encabezado
+  // Título del reporte
   doc.setFontSize(16);
   doc.text('Reporte Mensual de Inventario - Bajacar', 10, yOffset);
   doc.setFontSize(12);
   doc.text(`Mes: ${mesSeleccionado} - Generado el: ${new Date().toLocaleDateString()}`, 10, yOffset + 10);
   yOffset += 20;
 
-  // Productos insertados
+  // Si hay productos insertados, agregarlos a la tabla
   if (insertados.length > 0) {
     doc.setFontSize(14);
     doc.text('Productos Insertados:', 10, yOffset);
@@ -435,8 +434,8 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       p.id_producto,
       p.nombre_producto,
       p.categoria,
-      `$${p.precio_compra.toFixed(2)}`,
-      `$${p.precio_venta.toFixed(2)}`,
+      `$${parseFloat(p.precio_compra).toFixed(2)}`, // Asegúrate de que sean números
+      `$${parseFloat(p.precio_venta).toFixed(2)}`,
       p.stock_actual,
       p.descripcion,
     ]);
@@ -449,7 +448,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     yOffset = doc.lastAutoTable.finalY + 10;
   }
 
-  // Productos actualizados
+  // Si hay productos actualizados, agregarlos a la tabla
   if (actualizados.length > 0) {
     doc.setFontSize(14);
     doc.text('Productos Actualizados:', 10, yOffset);
@@ -459,9 +458,10 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
       p.id_producto,
       p.nombre_producto,
       p.categoria,
-      `$${parseFloat(p.precio_compra || 0).toFixed(2)}`, // Convertir cadena a número
-      `$${parseFloat(p.precio_venta || 0).toFixed(2)}`,
+      `$${parseFloat(p.precio_compra).toFixed(2)}`,
+      `$${parseFloat(p.precio_venta).toFixed(2)}`,
       p.stock_actual,
+      p.descripcion,
     ]);
 
     doc.autoTable({

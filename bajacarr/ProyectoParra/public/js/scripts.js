@@ -355,37 +355,6 @@ document.querySelector('#sales-section form').addEventListener('submit', async (
   }
 });
 
-const mostrarProductosEnTablas = (insertados, actualizados) => {
-  const tablaInsertados = document.getElementById('tabla-insertados').querySelector('tbody');
-  const tablaActualizados = document.getElementById('tabla-actualizados').querySelector('tbody');
-
-  tablaInsertados.innerHTML = '';
-  tablaActualizados.innerHTML = '';
-
-  insertados.forEach((p) => {
-    const fila = `<tr>
-      <td>${p.id_producto}</td>
-      <td>${p.nombre_producto}</td>
-      <td>${p.categoria}</td>
-      <td>$${p.precio_compra.toFixed(2)}</td>
-      <td>$${p.precio_venta.toFixed(2)}</td>
-      <td>${p.stock_actual}</td>
-    </tr>`;
-    tablaInsertados.innerHTML += fila;
-  });
-
-  actualizados.forEach((p) => {
-    const fila = `<tr>
-      <td>${p.id_producto}</td>
-      <td>${p.nombre_producto}</td>
-      <td>${p.categoria}</td>
-      <td>$${p.precio_compra.toFixed(2)}</td>
-      <td>$${p.precio_venta.toFixed(2)}</td>
-      <td>${p.stock_actual}</td>
-    </tr>`;
-    tablaActualizados.innerHTML += fila;
-  });
-};
 
 const cargarProductosPorMes = async (mes) => {
   try {

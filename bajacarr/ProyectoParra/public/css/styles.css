@@ -289,19 +289,22 @@ form button:hover {
     background-color: var(--text-color);
     color: var(--bg-color);
 }
-/* Fondo del modal */
-#custom-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Asegúrate de que esté sobre todo lo demás */
-  }
+
+
+/* Estilos del modal */
+#custom-modal,
+#stock-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
   
   /* Ocultar el modal por defecto */
   .hidden {

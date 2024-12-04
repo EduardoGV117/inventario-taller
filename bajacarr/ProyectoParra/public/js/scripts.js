@@ -357,25 +357,35 @@ document.querySelector('#sales-section form').addEventListener('submit', async (
 // Función para mostrar el modal con un mensaje
 function showModal(message) {
   const modal = document.getElementById('custom-modal');
-  const messageElement = document.getElementById('modal-message');
+  const messageElement = document.getElementById('custom-modal-message');
   messageElement.textContent = message;
-
   modal.classList.remove('hidden'); // Mostrar el modal
 }
 
-// Función para cerrar el modal
-function closeModal() {
-  const modal = document.getElementById('custom-modal');
-  modal.classList.add('hidden'); // Ocultar el modal
+// Función para mostrar el modal de stock con mensaje y campo
+function showStockModal(productId) {
+  const modal = document.getElementById('stock-modal');
+  const messageElement = document.getElementById('stock-modal-message');
+  const inputField = document.getElementById('stock-input');
+  
+  productIdToUpdate = productId;
+  messageElement.textContent = `¿Cuánto deseas agregar al stock del producto ${productId}?`;
+  
+  // Limpiar el campo de entrada
+  inputField.value = '';
+  
+  modal.classList.remove('hidden'); // Mostrar el modal
 }
-
 // Agregar evento al botón de cerrar
 document.getElementById('modal-close').addEventListener('click', closeModal);
+// Agregar evento al botón de cancelar
+document.getElementById('modal-close-stock').addEventListener('click', closeStockModal);
 
 // También cerrar el modal al hacer clic fuera de él
 document.getElementById('custom-modal').addEventListener('click', (event) => {
   if (event.target === event.currentTarget) closeModal();
 });
+
 
 let productIdToUpdate = null;
 
@@ -405,7 +415,7 @@ document.getElementById('modal-accept').addEventListener('click', async () => {
   const quantity = parseInt(document.getElementById('stock-input').value, 10);
   
   if (!quantity || quantity <= 0) {
-    showModal("Por favor ingresa una cantidad válida.");
+    showStockModal("Por favor ingresa una cantidad válida.");
     return;
   }
 
@@ -419,13 +429,11 @@ document.getElementById('modal-accept').addEventListener('click', async () => {
   const result = await response.json();
   
   if (result.success) {
-    showModal('Stock actualizado correctamente');
+    showStockModal('Stock actualizado correctamente');
   } else {
-    showModal('Error al actualizar stock');
+    showStockModal('Error al actualizar stock');
   }
   
   closeModal(); // Cerrar el modal después de la acción
 });
 
-// Agregar evento al botón de cerrar
-document.getElementById('modal-close').addEventListener('click', closeModal);

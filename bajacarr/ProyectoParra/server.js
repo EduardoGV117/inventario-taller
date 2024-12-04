@@ -244,8 +244,9 @@ app.post('/api/ventas', ensureAuthenticated, async (req, res) => {
 });
 
 app.get('/productos', ensureAuthenticated, async (req, res) => {
-  const mes = req.query.mes;  // Obtener el mes seleccionado (como número)
-  const año = new Date().getFullYear();  // Obtener el año actual
+  const mes = req.query.mes;  // Mes seleccionado como número
+  const año = new Date().getFullYear();  // Año actual
+  
   try {
     const query = `
       SELECT id_producto, nombre_producto, categoria,
@@ -253,19 +254,18 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
              CAST(precio_venta AS FLOAT) AS precio_venta,
              stock_actual, descripcion, fecha_creacion, fecha_actualizacion,
              CASE 
-               WHEN EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1
-                    AND EXTRACT(YEAR FROM fecha_creacion AT TIME ZONE 'UTC') = $2 THEN 'insertado'
-               WHEN EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1
-                    AND EXTRACT(YEAR FROM fecha_actualizacion AT TIME ZONE 'UTC') = $2 THEN 'actualizado'
+               WHEN TO_CHAR(fecha_creacion AT TIME ZONE 'UTC', 'YYYY-MM') = $1 THEN 'insertado'
+               WHEN TO_CHAR(fecha_actualizacion AT TIME ZONE 'UTC', 'YYYY-MM') = $1 THEN 'actualizado'
                ELSE NULL
              END AS tipo_cambio
       FROM productos
-      WHERE (EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1
-            AND EXTRACT(YEAR FROM fecha_creacion AT TIME ZONE 'UTC') = $2)
-         OR (EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1
-            AND EXTRACT(YEAR FROM fecha_actualizacion AT TIME ZONE 'UTC') = $2)
+      WHERE TO_CHAR(fecha_creacion AT TIME ZONE 'UTC', 'YYYY-MM') = $1
+         OR TO_CHAR(fecha_actualizacion AT TIME ZONE 'UTC', 'YYYY-MM') = $1
     `;
-    const result = await client.query(query, [mes, año]);  // Filtrar por mes y año
+    const filtro = `${año}-${mes.padStart(2, '0')}`;  // Formato 'YYYY-MM' para comparar
+    const result = await client.query(query, [filtro]);  // Pasar el filtro como parámetro
+    console.log('Filtro aplicado:', filtro);  // Verifica que el filtro tenga el formato correcto
+    console.log('Productos filtrados:', result.rows);  // Verifica los datos antes de enviarlos
     res.json(result.rows);  // Devolver los productos filtrados
   } catch (err) {
     console.error('Error al obtener los productos:', err);

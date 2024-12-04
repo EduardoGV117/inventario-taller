@@ -363,9 +363,9 @@ const cargarProductosPorMes = async (mes) => {
     if (!response.ok) throw new Error('Error al cargar productos');
     const productos = await response.json();
 
-    console.log('Productos recibidos:', productos);  // Verifica los productos
+    console.log('Productos recibidos:', productos);  // Verifica los productos recibidos
 
-    // Filtrar por tipo de cambio (insertados y actualizados)
+    // Categorizamos los productos
     const insertados = productos.filter((p) => p.tipo_cambio === 'insertado');
     const actualizados = productos.filter((p) => p.tipo_cambio === 'actualizado');
 

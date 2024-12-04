@@ -578,38 +578,9 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarProductos();
 });
 
-document.getElementById('sales-report-form').addEventListener('submit', async (event) => {
-  event.preventDefault();
 
-  const mes = document.getElementById('report-month').value;
-  const año = document.getElementById('report-year').value;
-
-  try {
-    const response = await fetch(`/reporte-ventas?mes=${mes}&año=${año}`);
-    if (!response.ok) throw new Error('Error al obtener el reporte de ventas.');
-
-    const ventas = await response.json();
-    const tableBody = document.getElementById('sales-report-table').querySelector('tbody');
-    tableBody.innerHTML = ''; // Limpiar tabla
-
-    ventas.forEach((venta) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${venta.id_factura_proveedor}</td>
-        <td>${venta.fecha_factura}</td>  <!-- Fecha ya formateada -->
-        <td>${venta.nombre_producto}</td>
-        <td>${venta.cantidad}</td>
-        <td>${venta.descripcion}</td>
-        <td>$${parseFloat(venta.total_venta).toFixed(2)}</td>
-      `;
-      tableBody.appendChild(row);
-    });
-  } catch (error) {
-    console.error(error.message);
-    alert('Hubo un problema al generar el reporte de ventas.');
-  }
-});
-
+// Lógica para generar el PDF del reporte de ventas
+// Escuchar el evento de submit en el formulario de reporte de ventas
 document.getElementById('sales-report-form').addEventListener('submit', async (event) => {
   event.preventDefault();
 

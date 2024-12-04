@@ -210,26 +210,41 @@ app.delete('/productos/eliminar', async (req, res) => {
 });
 
 app.post('/ventas', ensureAuthenticated, async (req, res) => {
-  const { invoiceId, productos } = req.body;
+  const { invoiceId, productos } = req.body;  // invoiceId es proporcionado por el proveedor
+  const descripcion = req.body.descripcion;   // Descripción opcional para la factura
 
   try {
     await client.query('BEGIN'); // Iniciar transacción
 
+    // Insertar la factura en la tabla `facturas`
+    const facturaResult = await client.query(
+      'INSERT INTO facturas (id_factura_proveedor, descripcion) VALUES ($1, $2) RETURNING id_factura',
+      [invoiceId, descripcion]  // Usamos `invoiceId` para id_factura_proveedor
+    );
+
+    const idFactura = facturaResult.rows[0].id_factura; // Obtener el id_factura generado automáticamente
+
+    // Procesar cada producto en la venta/baja
     for (const producto of productos) {
       // Reducir el stock en el inventario
-      await client.query(
-        'UPDATE productos SET stock_actual = stock_actual - $1 WHERE id_producto = $2 AND stock_actual >= $1',
+      const resultadoInventario = await client.query(
+        'UPDATE productos SET stock_actual = stock_actual - $1 WHERE id_producto = $2 AND stock_actual >= $1 RETURNING id_producto, stock_actual',
         [producto.cantidad, producto.id_producto]
       );
 
-      // Registrar la venta/baja
+      if (resultadoInventario.rows.length === 0) {
+        throw new Error(`No hay suficiente stock para el producto ID: ${producto.id_producto}`);
+      }
+
+      // Registrar la venta/baja en `detalle_factura`
       await client.query(
         'INSERT INTO detalle_factura (id_factura, id_producto, cantidad, descripcion) VALUES ($1, $2, $3, $4)',
-        [invoiceId, producto.id_producto, producto.cantidad, producto.descripcion]
+        [idFactura, producto.id_producto, producto.cantidad, producto.descripcion]
       );
     }
 
     await client.query('COMMIT'); // Confirmar transacción
+
     res.status(200).send('Venta/Baja registrada correctamente.');
   } catch (error) {
     await client.query('ROLLBACK'); // Revertir transacción en caso de error
@@ -237,6 +252,7 @@ app.post('/ventas', ensureAuthenticated, async (req, res) => {
     res.status(500).send('Error al registrar la venta/baja.');
   }
 });
+
 
 app.get('/productos', ensureAuthenticated, async (req, res) => {
   const mes = req.query.mes;  // Mes seleccionado como número ajsute aqui para poder cargar

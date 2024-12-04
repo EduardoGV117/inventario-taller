@@ -365,6 +365,14 @@ const cargarProductosPorMes = async (mes) => {
     return [];
   }
 };
+const rows = productos.map((producto) => [
+  producto.id_producto,
+  producto.nombre_producto || 'Sin nombre',
+  producto.categoria || 'Sin categoría',
+  `$${parseFloat(producto.precio_compra || 0).toFixed(2)}`, // Convertir cadena a número
+  `$${parseFloat(producto.precio_venta || 0).toFixed(2)}`,  // Convertir cadena a número
+  producto.stock_actual || 0,
+]);
 document.getElementById('generate-pdf').addEventListener('click', async () => {
   const mesSeleccionado = document.getElementById('report-month').value;
   const productos = await cargarProductosPorMes(mesSeleccionado);

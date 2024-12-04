@@ -244,7 +244,7 @@ app.post('/api/ventas', ensureAuthenticated, async (req, res) => {
 });
 
 app.get('/productos', ensureAuthenticated, async (req, res) => {
-  const mes = req.query.mes;
+  const mes = req.query.mes;  // Obtener el mes seleccionado
   try {
     const query = `
       SELECT id_producto, nombre_producto, categoria,
@@ -252,22 +252,22 @@ app.get('/productos', ensureAuthenticated, async (req, res) => {
              CAST(precio_venta AS FLOAT) AS precio_venta,
              stock_actual, descripcion, fecha_creacion, fecha_actualizacion,
              CASE 
-               WHEN EXTRACT(MONTH FROM fecha_creacion) = $1 THEN 'insertado'
-               WHEN EXTRACT(MONTH FROM fecha_actualizacion) = $1 THEN 'actualizado'
+               WHEN EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1 THEN 'insertado'
+               WHEN EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1 THEN 'actualizado'
                ELSE NULL
              END AS tipo_cambio
       FROM productos
-      WHERE EXTRACT(MONTH FROM fecha_creacion) = $1 
-         OR EXTRACT(MONTH FROM fecha_actualizacion) = $1
+      WHERE EXTRACT(MONTH FROM fecha_creacion AT TIME ZONE 'UTC') = $1 
+         OR EXTRACT(MONTH FROM fecha_actualizacion AT TIME ZONE 'UTC') = $1
     `;
-    const result = await client.query(query, [mes]);
-    console.log(result.rows);  // Agrega este log para ver los datos
-    res.json(result.rows);
+    const result = await client.query(query, [mes]);  // Filtrar por mes
+    res.json(result.rows);  // Devolver los productos filtrados
   } catch (err) {
     console.error('Error al obtener los productos:', err);
     res.status(500).send('Error al obtener los productos');
   }
 });
+
 
 // Iniciar servidor
 app.listen(port, '0.0.0.0', () => {

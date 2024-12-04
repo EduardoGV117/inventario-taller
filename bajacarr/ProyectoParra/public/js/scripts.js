@@ -263,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fecha = new Date(fechaISO);
     return fecha.toLocaleString('es-MX', opciones); // Ejemplo: "3 de diciembre de 2024, 12:34:56"
   };
+  
 
   const mostrarProductosEnTabla = (productos) => {
     const tabla = document.getElementById('inventory-table').querySelector('tbody');

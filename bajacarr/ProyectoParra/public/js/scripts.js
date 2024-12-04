@@ -1,5 +1,8 @@
 const navBtns = document.querySelectorAll('.nav-btn');
 const sections = document.querySelectorAll('.section');
+// Asegúrate de que los modales están ocultos al principio
+document.getElementById('custom-modal').classList.add('hidden');
+document.getElementById('stock-modal').classList.add('hidden');
 
 navBtns.forEach(btn => {
   btn.addEventListener('click', () => {

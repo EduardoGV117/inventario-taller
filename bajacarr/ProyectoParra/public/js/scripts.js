@@ -466,6 +466,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
   // Si hay productos actualizados, agregarlos a la tabla
   if (actualizados.length > 0) {
+    const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock', 'Descripción'];
     doc.setFontSize(14);
     doc.text('Productos Actualizados:', 10, yOffset);
     yOffset += 10;

@@ -386,11 +386,12 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
   const headers = ['ID', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock'];
   const rows = productos.map((producto) => [
     producto.id_producto,
-    producto.nombre_producto,
-    producto.categoria,
-    `$${producto.precio_compra.toFixed(2)}`,
-    `$${producto.precio_venta.toFixed(2)}`,
-    producto.stock_actual,
+    producto.nombre_producto || 'Sin nombre',
+    producto.categoria || 'Sin categoría',
+    `$${parseFloat(producto.precio_compra || 0).toFixed(2)}`, // Convertir cadena a número
+    `$${parseFloat(producto.precio_venta || 0).toFixed(2)}`,  // Convertir cadena a número
+    producto.stock_actual || 0,
+    producto.descripcion || 'Sin descripción',
   ]);
 
   // Crear tabla

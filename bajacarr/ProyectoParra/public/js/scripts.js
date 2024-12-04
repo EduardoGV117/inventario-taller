@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selected = [...document.querySelectorAll('#products-table tbody input[type="checkbox"]:checked')];
     const updates = selected.map((checkbox) => {
       const id = checkbox.dataset.id;
-      const amount = prompt(`¿Cuánto deseas agregar al stock del producto ${id}?`);
+      showStockModal(id);
       return { id, amount: parseInt(amount, 10) };
     });
 
@@ -221,9 +221,9 @@ document.getElementById("submitStockUpdate").addEventListener("click", async () 
 
   const result = await response.json();
   if (result.success) {
-      alert('Stock actualizado correctamente');
+      showModal('Stock actualizado correctamente');
   } else {
-      alert('Error al actualizar stock');
+      showModal('Error al actualizar stock');
   }
 });
 document.addEventListener('DOMContentLoaded', () => {
@@ -316,10 +316,10 @@ document.querySelector('#add-product-section form').addEventListener('submit', a
 
   if (response.ok) {
     const nuevoProducto = await response.json();
-    alert('Producto agregado con éxito');
+    showModal('Producto agregado con éxito');
     // Podrías actualizar la lista de productos aquí
   } else {
-    alert('Error al agregar producto');
+    showModal('Error al agregar producto');
   }
 });
 
@@ -348,8 +348,84 @@ document.querySelector('#sales-section form').addEventListener('submit', async (
 
   if (response.ok) {
     const ventaRegistrada = await response.json();
-    alert('Venta registrada con éxito');
+    showModal('Venta registrada con éxito');
   } else {
-    alert('Error al registrar la venta');
+    showModal('Error al registrar la venta');
   }
 });
+
+// Función para mostrar el modal con un mensaje
+function showModal(message) {
+  const modal = document.getElementById('custom-modal');
+  const messageElement = document.getElementById('modal-message');
+  messageElement.textContent = message;
+
+  modal.classList.remove('hidden'); // Mostrar el modal
+}
+
+// Función para cerrar el modal
+function closeModal() {
+  const modal = document.getElementById('custom-modal');
+  modal.classList.add('hidden'); // Ocultar el modal
+}
+
+// Agregar evento al botón de cerrar
+document.getElementById('modal-close').addEventListener('click', closeModal);
+
+// También cerrar el modal al hacer clic fuera de él
+document.getElementById('custom-modal').addEventListener('click', (event) => {
+  if (event.target === event.currentTarget) closeModal();
+});
+
+let productIdToUpdate = null;
+
+// Función para mostrar el modal con el mensaje y el campo de entrada
+function showStockModal(productId) {
+  const modal = document.getElementById('stock-modal');
+  const messageElement = document.getElementById('modal-message');
+  const inputField = document.getElementById('stock-input');
+  
+  productIdToUpdate = productId;
+  messageElement.textContent = `¿Cuánto deseas agregar al stock del producto ${productId}?`;
+  
+  // Limpiar el campo de entrada
+  inputField.value = '';
+  
+  modal.classList.remove('hidden'); // Mostrar el modal
+}
+
+// Función para cerrar el modal
+function closeModal() {
+  const modal = document.getElementById('stock-modal');
+  modal.classList.add('hidden'); // Ocultar el modal
+}
+
+// Agregar evento al botón de aceptar
+document.getElementById('modal-accept').addEventListener('click', async () => {
+  const quantity = parseInt(document.getElementById('stock-input').value, 10);
+  
+  if (!quantity || quantity <= 0) {
+    showModal("Por favor ingresa una cantidad válida.");
+    return;
+  }
+
+  // Enviar la actualización de stock al servidor
+  const response = await fetch('/productos/actualizar-stock', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id_producto: productIdToUpdate, cantidad: quantity })
+  });
+
+  const result = await response.json();
+  
+  if (result.success) {
+    showModal('Stock actualizado correctamente');
+  } else {
+    showModal('Error al actualizar stock');
+  }
+  
+  closeModal(); // Cerrar el modal después de la acción
+});
+
+// Agregar evento al botón de cerrar
+document.getElementById('modal-close').addEventListener('click', closeModal);
